@@ -34,33 +34,171 @@ export default {
 </script>
 
 <template>
-  <h1>Connection</h1>
+  <header>
+    <img src="../../public/img/logo.svg.svg" class="logo">
+    <h1>Guide the Beat</h1>
+  </header>
 
-  <form @submit.prevent="login">
-    <div class="form-group">
-      <label>E-mail</label>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="email"
-        v-model="user.email"
-      />
+  <div class="content">
+  <div class="card1">
+    <h2>Connexion</h2>
+  
+    <form @submit.prevent="login" class="formConnect">
+      <div class="form-group">
+      
+        <input 
+          type="text"
+          class="form-control"
+          placeholder="email"
+          v-model="user.email"
+        />
+      </div>
+  
+      <div class="form-group">
+        
+        <input
+          type="password"
+          class="form-control"
+          placeholder="password"
+          v-model="user.password"
+        />
+      </div>
+      <input type="submit" class="form-submit" placeholder="connexion" value="se connecter" />
+    </form>
+    <div>
+      <p @click="toogleModale">pas de compte ? Incrivez vous</p>
+  
+      <modale v-bind:modaleOpen="modalOpen" v-bind:toogleModale="toogleModale" />
     </div>
 
-    <div class="form-group">
-      <label>Password</label>
-      <input
-        type="password"
-        class="form-control"
-        placeholder="password"
-        v-model="user.password"
-      />
-    </div>
-    <input type="submit" class="form-control" placeholder="connexion" />
-  </form>
-  <div>
-    <p @click="toogleModale">pas de compte ? Incrivez vous</p>
-
-    <modale v-bind:modaleOpen="modalOpen" v-bind:toogleModale="toogleModale" />
+  </div>
+  <div class="card2">
+    <h2 class="h2Bis">Le site de guides communautaires
+autour de la musique
+</h2>
+<div class="line"></div>
+<p class="card2-p">Vous voulez apprendre ou faire apprendre un instrument, 
+de la MAO, ou tout simplement la culture musical, ce site est fait pour vous </p>
+</div>
   </div>
 </template>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+
+
+body{
+  background-color: #1D2121;
+}
+
+header{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5%;
+}
+.content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.logo{
+  width: 30%;
+}
+h1,h2{
+  font-family: 'Josefin Sans', sans-serif;
+  
+}
+h1{
+  color:#F3F3F3;
+}
+h2{
+  font-size: 30px;
+  color:#1D2121;
+  
+}
+.card1{
+  background-color: #14F195;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5%;
+  box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
+}
+.formConnect{
+  width: 100%;
+  text-align: center;
+}
+.form-control{
+  background-color: #1D2121;
+  width: 80%;
+  height: 50px;
+  border-radius: 50px;
+  outline: none;
+  margin-bottom: 3%;
+
+}
+ ::placeholder{
+  color:#F3F3F3;
+} 
+input {
+  color:#F3F3F3;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 120%;
+  padding-left: 5%;
+}
+.form-submit{
+  background-color: #EB54BC;
+  border: none;
+  text-align: center;
+  padding: 10px;
+  width: 50%;
+  border-radius: 30px;
+  outline: none;
+
+}
+p{
+  color:#1D2121;
+  font-family: 'Josefin Sans', sans-serif;
+}
+.card2{
+  margin-top: 20%;
+  background-color: #EB54BC;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5%;
+  box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
+}
+.h2Bis{
+  color:#F3F3F3;
+  font-size: 30px;
+  width: 90%;
+  text-align: center;
+}
+.line{
+  background-color:#1D2121;
+  width: 90%;
+  height: 8px;
+  border-radius: 50px;
+
+}
+.card2-p{
+  color:#F3F3F3;
+  font-size: 20px;
+  width: 90%;
+  text-align: center;
+  
+}
+
+
+
+
+
+
+</style>
