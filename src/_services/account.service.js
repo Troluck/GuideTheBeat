@@ -17,9 +17,14 @@ function isLogged() {
   return !!token;
 }
 
+function register(credential) {
+  return Axios.post("/registration", credential);
+}
+
 export const accountService = {
   login,
   logout,
   saveToken,
   isLogged,
+  register,
 };

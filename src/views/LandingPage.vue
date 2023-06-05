@@ -1,14 +1,19 @@
 <script>
 import { accountService } from "../_services/account.service";
+import ModalRegister from "../components/ModalRegister.vue";
 
 export default {
   name: "LandingPage",
+  components: {
+    modale: ModalRegister,
+  },
   data() {
     return {
       user: {
         email: "",
         password: "",
       },
+      modalOpen: false,
     };
   },
   methods: {
@@ -20,6 +25,9 @@ export default {
           accountService.saveToken(res.data.token);
         })
         .catch((err) => console.log(err));
+    },
+    toogleModale: function () {
+      this.modalOpen = !this.modalOpen;
     },
   },
 };
@@ -50,4 +58,9 @@ export default {
     </div>
     <input type="submit" class="form-control" placeholder="connexion" />
   </form>
+  <div>
+    <p @click="toogleModale">pas de compte ? Incrivez vous</p>
+
+    <modale v-bind:modaleOpen="modalOpen" v-bind:toogleModale="toogleModale" />
+  </div>
 </template>
