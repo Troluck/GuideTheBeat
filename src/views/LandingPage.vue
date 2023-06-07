@@ -72,6 +72,10 @@ export default {
     </div>
 
   </div>
+  <div class="imgdiv">
+  <img src="../../img/radio1.png" class="img1">
+  </div>
+ 
   <div class="card2">
     <h2 class="h2Bis">Le site de guides communautaires
 autour de la musique
@@ -97,7 +101,7 @@ header{
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 5%;
+  margin-top: 2vh;
 }
 .content{
   display: flex;
@@ -106,10 +110,11 @@ header{
 
 }
 .logo{
-  width: 30%;
+  width: 20vh;
 }
 h1,h2{
   font-family: 'Josefin Sans', sans-serif;
+  font-size: 5vh;
   
 }
 h1{
@@ -122,7 +127,7 @@ h2{
 }
 .card1{
   background-color: #14F195;
-  width: 90%;
+  width: 90vmin;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -159,16 +164,21 @@ input {
   width: 50%;
   border-radius: 30px;
   outline: none;
+  cursor: pointer;
 
 }
 p{
   color:#1D2121;
   font-family: 'Josefin Sans', sans-serif;
+  margin-bottom: 25vmin;
+  margin-top:10%;
+  font-size: 4vmin;
+  cursor: pointer;
 }
 .card2{
-  margin-top: 20%;
+  margin-top: 5vmin;
   background-color: #EB54BC;
-  width: 90%;
+  width: 90vmin;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,7 +204,20 @@ p{
   width: 90%;
   text-align: center;
   
+  
 }
+.img1{
+height: 100%;
+width: 100%;  
+}
+.imgdiv{
+position: relative;
+  height: 40vmin;
+  top:-20vmin;
+  left: 5vmin; 
+}
+
+
 
 
 
