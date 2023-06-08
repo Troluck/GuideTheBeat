@@ -1,5 +1,6 @@
 <script>
 import { accountService } from "../_services/account.service";
+import { categoryService } from "../_services/category.service";
 import ModalRegister from "../components/ModalRegister.vue";
 
 export default {
@@ -13,8 +14,12 @@ export default {
         email: "",
         password: "",
       },
+      categories:[],
       modalOpen: false,
     };
+  },
+  mounted() {
+    this.AllCategory();
   },
   methods: {
     login() {
@@ -23,6 +28,15 @@ export default {
         .then((res) => {
           console.log(res.data);
           accountService.saveToken(res.data.token);
+        })
+        .catch((err) => console.log(err));
+    },
+    AllCategory() {
+      categoryService
+        .getAllCategory()
+        .then((res) => {
+          this.categories=res.data.category;
+          console.log(this.categories);
         })
         .catch((err) => console.log(err));
     },
@@ -83,6 +97,7 @@ autour de la musique
 <div class="line"></div>
 <p class="card2-p">Vous voulez apprendre ou faire apprendre un instrument, 
 de la MAO, ou tout simplement la culture musical, ce site est fait pour vous </p>
+<p v-for="category in categories" :key="category._id">{{ category.label }}</p>
 </div>
   </div>
 </template>
