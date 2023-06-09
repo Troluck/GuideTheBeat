@@ -1,6 +1,5 @@
 <script>
 import { accountService } from "../_services/account.service";
-import { categoryService } from "../_services/category.service";
 import ModalRegister from "../components/ModalRegister.vue";
 
 export default {
@@ -14,12 +13,9 @@ export default {
         email: "",
         password: "",
       },
-      categories:[],
+
       modalOpen: false,
     };
-  },
-  mounted() {
-    this.AllCategory();
   },
   methods: {
     login() {
@@ -31,15 +27,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    AllCategory() {
-      categoryService
-        .getAllCategory()
-        .then((res) => {
-          this.categories=res.data.category;
-          console.log(this.categories);
-        })
-        .catch((err) => console.log(err));
-    },
+
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
@@ -49,99 +37,108 @@ export default {
 
 <template>
   <header>
-    <img src="../../public/img/logo.svg.svg" class="logo">
+    <img src="../../public/img/logo.svg.svg" class="logo" />
     <h1>Guide the Beat</h1>
   </header>
 
   <div class="content">
-  <div class="card1">
-    <h2>Connexion</h2>
-  
-    <form @submit.prevent="login" class="formConnect">
-      <div class="form-group">
-      
-        <input 
-          type="text"
-          class="form-control"
-          placeholder="email"
-          v-model="user.email"
-        />
-      </div>
-  
-      <div class="form-group">
-        
+    <div class="card1">
+      <h2>Connexion</h2>
+
+      <form @submit.prevent="login" class="formConnect">
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="email"
+            v-model="user.email"
+          />
+        </div>
+
+        <div class="form-group">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="password"
+            v-model="user.password"
+          />
+        </div>
         <input
-          type="password"
-          class="form-control"
-          placeholder="password"
-          v-model="user.password"
+          type="submit"
+          class="form-submit"
+          placeholder="connexion"
+          value="se connecter"
+        />
+      </form>
+      <div>
+        <p @click="toogleModale">pas de compte ? Incrivez vous</p>
+
+        <modale
+          v-bind:modaleOpen="modalOpen"
+          v-bind:toogleModale="toogleModale"
         />
       </div>
-      <input type="submit" class="form-submit" placeholder="connexion" value="se connecter" />
-    </form>
-    <div>
-      <p @click="toogleModale">pas de compte ? Incrivez vous</p>
-  
-      <modale v-bind:modaleOpen="modalOpen" v-bind:toogleModale="toogleModale" />
+    </div>
+    <div class="imgdiv" style="z-index: 0">
+      <img src="../../img/radio1.png" class="img1" />
     </div>
 
-  </div>
-  <div class="imgdiv">
-  <img src="../../img/radio1.png" class="img1">
-  </div>
- 
-  <div class="card2">
-    <h2 class="h2Bis">Le site de guides communautaires
-autour de la musique
-</h2>
-<div class="line"></div>
-<p class="card2-p">Vous voulez apprendre ou faire apprendre un instrument, 
-de la MAO, ou tout simplement la culture musical, ce site est fait pour vous </p>
-<p v-for="category in categories" :key="category._id">{{ category.label }}</p>
-</div>
+    <div class="card2">
+      <h2 class="h2Bis">
+        Le site de guides communautaires autour de la musique
+      </h2>
+      <div class="line"></div>
+      <p class="card2-p">
+        Vous voulez apprendre ou faire apprendre un instrument, de la MAO, ou
+        tout simplement la culture musical, ce site est fait pour vous
+      </p>
+    </div>
   </div>
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap");
 
-
-body{
-  background-color: #1D2121;
+body {
+  background-color: #1d2121;
 }
 
-header{
+header {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   margin-top: 2vh;
 }
-.content{
+
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
-.logo{
+
+.logo {
   width: 20vh;
 }
-h1,h2{
-  font-family: 'Josefin Sans', sans-serif;
+
+h1,
+h2 {
+  font-family: "Josefin Sans", sans-serif;
   font-size: 5vh;
-  
 }
-h1{
-  color:#F3F3F3;
+
+h1 {
+  color: #f3f3f3;
 }
-h2{
+
+h2 {
   font-size: 30px;
-  color:#1D2121;
-  
+  color: #1d2121;
 }
-.card1{
-  background-color: #14F195;
+
+.card1 {
+  background-color: #14f195;
   width: 90vmin;
   display: flex;
   flex-direction: column;
@@ -149,30 +146,34 @@ h2{
   border-radius: 5%;
   box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
 }
-.formConnect{
+
+.formConnect {
   width: 100%;
   text-align: center;
 }
-.form-control{
-  background-color: #1D2121;
+
+.form-control {
+  background-color: #1d2121;
   width: 80%;
   height: 50px;
   border-radius: 50px;
   outline: none;
   margin-bottom: 3%;
-
 }
- ::placeholder{
-  color:#F3F3F3;
-} 
+
+::placeholder {
+  color: #f3f3f3;
+}
+
 input {
-  color:#F3F3F3;
-  font-family: 'Josefin Sans', sans-serif;
+  color: #f3f3f3;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 120%;
   padding-left: 5%;
 }
-.form-submit{
-  background-color: #EB54BC;
+
+.form-submit {
+  background-color: #eb54bc;
   border: none;
   text-align: center;
   padding: 10px;
@@ -180,19 +181,20 @@ input {
   border-radius: 30px;
   outline: none;
   cursor: pointer;
-
 }
-p{
-  color:#1D2121;
-  font-family: 'Josefin Sans', sans-serif;
+
+p {
+  color: #1d2121;
+  font-family: "Josefin Sans", sans-serif;
   margin-bottom: 25vmin;
-  margin-top:10%;
+  margin-top: 10%;
   font-size: 4vmin;
   cursor: pointer;
 }
-.card2{
+
+.card2 {
   margin-top: 5vmin;
-  background-color: #EB54BC;
+  background-color: #eb54bc;
   width: 90vmin;
   display: flex;
   flex-direction: column;
@@ -200,43 +202,36 @@ p{
   border-radius: 5%;
   box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
 }
-.h2Bis{
-  color:#F3F3F3;
+
+.h2Bis {
+  color: #f3f3f3;
   font-size: 30px;
   width: 90%;
   text-align: center;
 }
-.line{
-  background-color:#1D2121;
+
+.line {
+  background-color: #1d2121;
   width: 90%;
   height: 8px;
   border-radius: 50px;
-
 }
-.card2-p{
-  color:#F3F3F3;
+
+.card2-p {
+  color: #f3f3f3;
   font-size: 20px;
   width: 90%;
   text-align: center;
-  
-  
 }
-.img1{
-height: 100%;
-width: 100%;  
+
+.img1 {
+  height: 100%;
+  width: 100%;
 }
-.imgdiv{
-position: relative;
+
+.imgdiv {
+  position: relative;
   height: 40vmin;
-  top:-20vmin;
-  left: 5vmin; 
+  top: -20vmin;
 }
-
-
-
-
-
-
-
-
 </style>
