@@ -4,8 +4,6 @@ function getAllCategory() {
   return Axios.get("/getAllCategory");
 }
 
-
-
 export const categoryService = {
-  getAllCategory
+  getAllCategory,
 };

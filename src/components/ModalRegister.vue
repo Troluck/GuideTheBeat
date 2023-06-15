@@ -32,6 +32,7 @@ export default {
         .register(this.user)
         .then((res) => {
           console.log(res.data);
+          this.$emit("toogleModale");
         })
         .catch((err) => console.log(err));
     },
