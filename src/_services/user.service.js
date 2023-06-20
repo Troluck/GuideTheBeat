@@ -7,7 +7,7 @@ function getAllUser() {
 function getUser() {
   const token = localStorage.getItem("token");
   console.log(token);
-  return Axios.get("/findUserToken", token);
+  return Axios.get(`/findUserToken/${token}`);
 }
 
 export const userService = {

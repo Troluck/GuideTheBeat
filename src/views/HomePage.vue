@@ -6,13 +6,25 @@ export default {
   data() {
     return {
       token: null,
-      userData: null,
+      userData: [],
     };
   },
   mounted() {
-    userService.getUser();
+    this.GetUser();
   },
-  methods: {},
+  methods: {
+    GetUser() {
+      userService
+        .getUser()
+        .then((res) => {
+          this.userData = res.data.user.map((user) => ({
+            ...user,
+          }));
+          this.userData = this.userData[0];
+        })
+        .catch((err) => console.log(err));
+    },
+  },
 };
 </script>
 
@@ -20,7 +32,9 @@ export default {
   <header>
     <img src="../../public/img/logo.svg.svg" class="logo" />
     <div class="profil">
-      <div class="profilButton"></div>
+      <p class="usernameText">
+        {{ userData.username ? userData.username.charAt(0) : "" }}
+      </p>
     </div>
   </header>
 </template>
@@ -33,12 +47,14 @@ header {
 }
 .profil {
   background-color: red;
-  width: 20vh;
+  width: 5vh;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
 }
-.profilButton {
-  background-color: red;
-  height: 20px;
-  width: 20px;
-  border-radius: 10px;
+
+.usernameText {
+  font-size: 100%;
 }
 </style>
