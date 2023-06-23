@@ -1,6 +1,7 @@
 <script>
 import { accountService } from "../_services/account.service";
 import { categoryService } from "../_services/category.service";
+import { userService } from "../_services/user.service";
 export default {
   name: "ModalRegister",
   props: ["modaleOpen", "toogleModale", "userData"],
@@ -9,7 +10,6 @@ export default {
       user: {
         username: this.userData.username,
         email: this.userData.email,
-        password: "",
         role: this.userData.role,
         category: [],
       },
@@ -20,6 +20,7 @@ export default {
   mounted() {
     this.AllCategory();
     console.log(this.userData.username);
+    console.log(this.userData._id);
   },
   methods: {
     AllCategory() {
@@ -32,7 +33,16 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    UpdateUser() {
+      userService
+        .updateUser(this.userData._id, this.user)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    },
   },
+
   watch: {
     userData: {
       immediate: true,
@@ -67,7 +77,7 @@ export default {
     <div class="overlay">
       <div class="quite" @click="toogleModale">X</div>
       <h2>Profil</h2>
-      <form @submit.prevent="register" class="formRegister">
+      <form @submit.prevent="UpdateUser" class="formRegister">
         <div class="form-group">
           <input
             type="text"
