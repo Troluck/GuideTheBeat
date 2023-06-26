@@ -34,12 +34,14 @@ export default {
         .catch((err) => console.log(err));
     },
     UpdateUser() {
+      
       userService
         .updateUser(this.userData._id, this.user)
         .then((res) => {
           console.log(res.data);
         })
         .catch((err) => console.log(err));
+        this.$emit('role-updated', this.user.role);
     },
   },
 
@@ -62,9 +64,7 @@ export default {
                 category.isChecked = true;
               }
             });
-            if (this.user.role == "editor") {
-              this.user.role = true;
-            }
+          
           }
         }
       },
@@ -115,6 +115,7 @@ export default {
             class="form-control-editor"
             v-model="user.role"
             :checked="user.role === 'editor'"
+            @change="user.role = $event.target.checked ? 'editor' : 'null'"
           />
         </div>
 

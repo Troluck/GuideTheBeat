@@ -3,7 +3,7 @@ import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import ModalProfil from "../components/ModalProfil.vue";
 export default {
-  name: "HomePage",
+  name: "EditGuidePage",
   components: {
     modale: ModalProfil,
   },
@@ -32,16 +32,10 @@ export default {
             ...user,
           }));
           this.userData = this.userData[0];
-          this.isEditor = this.userData.role === 'editor';
         })
         .catch((err) => console.log(err));
     },
-    handleRoleUpdated(newRole) {
-      this.isEditor = newRole === 'editor';
-    },
-    goToEditGuidePage() {
-    this.$router.push('/editGuide');
-  }
+  
   },
 };
 </script>
@@ -49,7 +43,6 @@ export default {
 <template>
   <header>
     <img src="../../public/img/logo.svg.svg" class="logo" />
-    <button  v-if="isEditor"  @click="goToEditGuidePage"  class="guideButton">Ecrire guide</button>
     <div class="profil" @click="toogleModale">
       <p class="usernameText">
         {{ userData.username ? userData.username.charAt(0) : "" }}
@@ -60,7 +53,7 @@ export default {
     :userData="userData"
     :modaleOpen="modalOpen"
     :toogleModale="toogleModale"
-    @role-updated="handleRoleUpdated"
+ 
   />
 </template>
 
