@@ -33,16 +33,13 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    toggleCategory(category) {
-    const index = this.user.category.indexOf(category._id);
-    if (index > -1) {
-      this.user.category.splice(index, 1);
-    } else {
-      this.user.category.push(category._id);
-    }
-  },
+   
     UpdateUser() {
-      
+      if (this.user.isEditor) {
+        this.user.role = "editor";
+      } else {
+        this.user.role = null;
+      }
       userService
         .updateUser(this.userData._id, this.user)
         .then((res) => {
@@ -67,10 +64,12 @@ export default {
             this.user.category.forEach((categoryId) => {
               const category = this.categories.find(
                 (c) => c._id === categoryId
-              );
-              if (category) {
-                category.isChecked = true;
-              }
+              );  
+              if (newUserData.role === "editor") {
+            this.user.isEditor = true;
+          } else {
+            this.user.isEditor = false;
+          }
             });
           
           }
@@ -122,10 +121,7 @@ export default {
           <input
             type="checkbox"
             class="form-control-editor"
-            v-model="user.role"
-            :checked="user.role === 'editor'"
-            @change="user.role = $event.target.checked ? 'editor' : 'null'"
-            @click="toggleCategory(category)"
+            v-model="user.isEditor"
           />
         </div>
 

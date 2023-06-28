@@ -2,6 +2,7 @@
 import { accountService } from "../_services/account.service";
 import ModalRegister from "../components/ModalRegister.vue";
 
+
 export default {
   name: "LandingPage",
   components: {

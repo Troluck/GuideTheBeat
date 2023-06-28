@@ -2,10 +2,11 @@
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import ModalProfil from "../components/ModalProfil.vue";
+import EditGuide from "../components/EditGuide.vue";
 export default {
   name: "EditGuidePage",
   components: {
-    modale: ModalProfil,
+    EditGuide:EditGuide,
   },
   data() {
     return {
@@ -16,55 +17,48 @@ export default {
     };
   },
   mounted() {
-    this.GetUser();
+ 
     
   },
   methods: {
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
-    GetUser() {
-      userService
-        .getUser()
-        
-        .then((res) => {
-          this.userData = res.data.user.map((user) => ({
-            ...user,
-          }));
-          this.userData = this.userData[0];
-        })
-        .catch((err) => console.log(err));
-    },
+   
   
   },
 };
 </script>
 
+
+
 <template>
   <header>
+    <div class="headerHome">
     <img src="../../public/img/logo.svg.svg" class="logo" />
     <div class="profil" @click="toogleModale">
       <p class="usernameText">
         {{ userData.username ? userData.username.charAt(0) : "" }}
       </p>
     </div>
+    </div>
   </header>
-  <modale
-    :userData="userData"
-    :modaleOpen="modalOpen"
-    :toogleModale="toogleModale"
- 
-  />
+<h1>Ecrire Guide</h1>
+<EditGuide/>
 </template>
 
 <style>
 @media (max-width: 767px) {
-  header {
+  .headerHome {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     margin-left: 7%;
     margin-right: 7%;
     margin-top: 5%;
+  }
+  h1{
+    text-align: center;
   }
 
   .logo {
