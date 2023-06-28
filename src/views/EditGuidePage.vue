@@ -61,7 +61,6 @@ export default {
 @media (max-width: 767px) {
   header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     margin-left: 7%;
     margin-right: 7%;

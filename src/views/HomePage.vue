@@ -48,6 +48,7 @@ export default {
 
 <template>
   <header>
+    <div class="headerHome">
     <img src="../../public/img/logo.svg.svg" class="logo" />
     <button  v-if="isEditor"  @click="goToEditGuidePage"  class="guideButton">Ecrire guide</button>
     <div class="profil" @click="toogleModale">
@@ -55,6 +56,7 @@ export default {
         {{ userData.username ? userData.username.charAt(0) : "" }}
       </p>
     </div>
+  </div>
   </header>
   <modale
     :userData="userData"
@@ -66,9 +68,9 @@ export default {
 
 <style>
 @media (max-width: 767px) {
-  header {
+  .headerHome {
+    width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     margin-left: 7%;
     margin-right: 7%;

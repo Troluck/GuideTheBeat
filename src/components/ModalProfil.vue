@@ -33,6 +33,14 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    toggleCategory(category) {
+    const index = this.user.category.indexOf(category._id);
+    if (index > -1) {
+      this.user.category.splice(index, 1);
+    } else {
+      this.user.category.push(category._id);
+    }
+  },
     UpdateUser() {
       
       userService
@@ -100,11 +108,12 @@ export default {
         <div class="categoryDiv">
           <label
             class="checkbox-button"
-            :class="{ checked: category.isChecked }"
+            :class="{ checked: user.category.includes(category._id) }"
             v-for="category in categories"
             :key="category._id"
+            
           >
-            <input type="checkbox" v-model="category.isChecked" />
+            <input type="checkbox" v-model="user.category" :value="category._id"/>
             <span>{{ category.label }}</span>
           </label>
         </div>
@@ -116,6 +125,7 @@ export default {
             v-model="user.role"
             :checked="user.role === 'editor'"
             @change="user.role = $event.target.checked ? 'editor' : 'null'"
+            @click="toggleCategory(category)"
           />
         </div>
 
