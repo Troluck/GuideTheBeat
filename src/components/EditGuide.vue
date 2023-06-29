@@ -4,37 +4,48 @@ import { categoryService } from "../_services/category.service";
 import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "EditGuide",
-  props: [],
+  props: ["userData"],
   components: {
     editor: Editor,
   },
   data() {
     return {
+      user: {
+        _id: this.userData._id,
+      },
       guide: {
         title: "",
         image: null,
         subtitle: "",
         content: "",
+        user: "",
         category: [],
       },
       categories: [],
+      isChecked: false,
     };
   },
   methods: {
     handleImageUpload(event) {
-  const file = event.target.files[0];
-  this.guide.image = file;
-},
-
+      const file = event.target.files[0];
+      this.guide.image = file;
+    },
 
     addGuide() {
+      this.guide.user = this.user._id;
+      this.guide.category = this.categories
+        .filter((category) => category.isChecked)
+        .map((category) => category._id);
       const formData = new FormData();
       formData.append("title", this.guide.title);
       formData.append("subtitle", this.guide.subtitle);
       formData.append("content", this.guide.content);
       formData.append("category", this.guide.category);
       formData.append("image", this.guide.image);
-      guideService.addGuide(formData)
+      formData.append("user", this.guide.user);
+      // formData.append("user", this.guide.user);
+      guideService
+        .addGuide(formData)
         .then((res) => {
           console.log(res.data);
         })
@@ -54,6 +65,16 @@ export default {
   mounted() {
     this.AllCategory();
   },
+  watch: {
+    userData: {
+      immediate: true,
+      handler(newUserData) {
+        if (newUserData) {
+          this.user._id = newUserData._id;
+        }
+      },
+    },
+  },
 };
 </script>
 <template>
@@ -65,17 +86,23 @@ export default {
     <div class="categoryDiv">
       <label
         class="checkbox-button"
-        :class="{ checked: guide.category.includes(category._id) }"
+        :class="{ checked: category.isChecked }"
         v-for="category in categories"
         :key="category._id"
       >
-        <input type="checkbox" v-model="guide.category" :value="category._id" />
+        <input type="checkbox" v-model="category.isChecked" />
         <span>{{ category.label }}</span>
       </label>
     </div>
     <div>
       <label for="img">Image:</label>
-      <input type="file" id="image" name="image" @change="handleImageUpload" required>
+      <input
+        type="file"
+        id="image"
+        name="image"
+        @change="handleImageUpload"
+        required
+      />
     </div>
     <div>
       <label for="subtitle">Sous-titre:</label>
@@ -92,9 +119,10 @@ export default {
           menubar: false,
           plugins: [],
           toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-            alignleft aligncenter alignright alignjustify | \
+            'alignleft aligncenter alignright alignjustify | fontsizeinput| formatselect | bold italic backcolor \
+            | h1| h2| h3\
             bullist numlist outdent indent | removeformat | help',
+          font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt',
         }"
       ></editor>
     </div>

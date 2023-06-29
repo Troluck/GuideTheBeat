@@ -33,7 +33,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-   
+
     UpdateUser() {
       if (this.user.isEditor) {
         this.user.role = "editor";
@@ -46,7 +46,7 @@ export default {
           console.log(res.data);
         })
         .catch((err) => console.log(err));
-        this.$emit('role-updated', this.user.role);
+      this.$emit("role-updated", this.user.role);
     },
   },
 
@@ -64,14 +64,13 @@ export default {
             this.user.category.forEach((categoryId) => {
               const category = this.categories.find(
                 (c) => c._id === categoryId
-              );  
+              );
               if (newUserData.role === "editor") {
-            this.user.isEditor = true;
-          } else {
-            this.user.isEditor = false;
-          }
+                this.user.isEditor = true;
+              } else {
+                this.user.isEditor = false;
+              }
             });
-          
           }
         }
       },
@@ -110,9 +109,12 @@ export default {
             :class="{ checked: user.category.includes(category._id) }"
             v-for="category in categories"
             :key="category._id"
-            
           >
-            <input type="checkbox" v-model="user.category" :value="category._id"/>
+            <input
+              type="checkbox"
+              v-model="user.category"
+              :value="category._id"
+            />
             <span>{{ category.label }}</span>
           </label>
         </div>

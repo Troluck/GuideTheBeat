@@ -6,7 +6,8 @@ import EditGuide from "../components/EditGuide.vue";
 export default {
   name: "EditGuidePage",
   components: {
-    EditGuide:EditGuide,
+    EditGuide: EditGuide,
+    modale: ModalProfil,
   },
   data() {
     return {
@@ -17,34 +18,48 @@ export default {
     };
   },
   mounted() {
- 
-    
+    this.GetUser();
   },
   methods: {
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
-   
-  
+    GetUser() {
+      userService
+        .getUser()
+
+        .then((res) => {
+          this.userData = res.data.user.map((user) => ({
+            ...user,
+          }));
+          this.userData = this.userData[0];
+          this.isEditor = this.userData.role === "editor";
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
 
-
-
 <template>
   <header>
     <div class="headerHome">
-    <img src="../../public/img/logo.svg.svg" class="logo" />
-    <div class="profil" @click="toogleModale">
-      <p class="usernameText">
-        {{ userData.username ? userData.username.charAt(0) : "" }}
-      </p>
-    </div>
+      <img src="../../public/img/logo.svg.svg" class="logo" />
+      <div class="profil" @click="toogleModale">
+        <p class="usernameText">
+          {{ userData.username ? userData.username.charAt(0) : "" }}
+        </p>
+      </div>
     </div>
   </header>
-<h1>Ecrire Guide</h1>
-<EditGuide/>
+  <modale
+    :userData="userData"
+    :modaleOpen="modalOpen"
+    :toogleModale="toogleModale"
+    @role-updated="handleRoleUpdated"
+  />
+  <h1>Ecrire Guide</h1>
+  <EditGuide :userData="userData" />
 </template>
 
 <style>
@@ -57,7 +72,7 @@ export default {
     margin-right: 7%;
     margin-top: 5%;
   }
-  h1{
+  h1 {
     text-align: center;
   }
 
