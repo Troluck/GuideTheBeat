@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LandingPage from "../views/LandingPage.vue";
 import HomePage from "../views/HomePage.vue";
-import EditGuidePage from"../views/EditGuidePage.vue";
+import EditGuidePage from "../views/EditGuidePage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
