@@ -12,7 +12,7 @@ export default {
     return {
       guide: {
         title: "",
-        img: null,
+        image: null,
         subtitle: "",
         content: "",
         category: [],
@@ -21,17 +21,20 @@ export default {
     };
   },
   methods: {
+    handleImageUpload(event) {
+  const file = event.target.files[0];
+  this.guide.image = file;
+},
+
+
     addGuide() {
       const formData = new FormData();
       formData.append("title", this.guide.title);
       formData.append("subtitle", this.guide.subtitle);
       formData.append("content", this.guide.content);
       formData.append("category", this.guide.category);
-      formData.append("img", this.$refs.img.files[0]);
-      this.guide.img = this.$refs.img.files[0];
-      console.log(this.$refs.img.files[0]);
-      guideService
-        .addGuide(this.guide)
+      formData.append("image", this.guide.image);
+      guideService.addGuide(formData)
         .then((res) => {
           console.log(res.data);
         })
@@ -72,7 +75,7 @@ export default {
     </div>
     <div>
       <label for="img">Image:</label>
-      <input type="file" id="image" name="img" ref="img" accept="image/*" />
+      <input type="file" id="image" name="image" @change="handleImageUpload" required>
     </div>
     <div>
       <label for="subtitle">Sous-titre:</label>

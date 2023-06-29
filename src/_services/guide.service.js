@@ -4,7 +4,7 @@ function getAllGuides() {
   return Axios.get("/allGuides");
 }
 function addGuide(credential) {
-  console.log(credential.img.name);
+  console.log(credential);
   return Axios.post("/addGuide", credential);
 }
 
