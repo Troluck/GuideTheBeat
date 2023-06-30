@@ -119,6 +119,7 @@ export default {
 :root {
   --color-primary: #14f195;
   --color-secondary: #eb54bc;
+  --color-tertiary: #80ecff;
   --color-text-light: #f3f3f3;
   --color-text-dark: #1d2121;
   --color-background: #1d2121;
@@ -274,6 +275,7 @@ h2 {
   border-radius: 30px;
   outline: none;
   cursor: pointer;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 /* Autres */

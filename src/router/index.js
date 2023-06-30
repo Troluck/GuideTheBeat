@@ -18,7 +18,7 @@ const router = createRouter({
       component: HomePage,
     },
     {
-      path: "/editGuide",
+      path: "/editGuide/:guidename?",
       name: "editGuide",
       component: EditGuidePage,
     },

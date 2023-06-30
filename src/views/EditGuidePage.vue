@@ -2,25 +2,30 @@
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import ModalProfil from "../components/ModalProfil.vue";
-import EditGuide from "../components/EditGuide.vue";
+import CreateGuide from "../components/CreateGuide.vue";
+import { guideService } from "../_services/guide.service";
 export default {
   name: "EditGuidePage",
   components: {
-    EditGuide: EditGuide,
+    CreateGuide: CreateGuide,
     modale: ModalProfil,
   },
   data() {
     return {
       token: null,
       userData: [],
+      guide:[],
       modalOpen: false,
       isEditor: false,
     };
   },
   mounted() {
     this.GetUser();
+   
+    
   },
   methods: {
+   
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
@@ -34,10 +39,37 @@ export default {
           }));
           this.userData = this.userData[0];
           this.isEditor = this.userData.role === "editor";
+          
+          if (this.$route.params.hasOwnProperty('guidename')) {
+           const formattedGuidename = this.$route.params.guidename;
+           const guidename = formattedGuidename.replace(/-/g, "%20");
+           console.log(this.userData._id);
+           this.GetGuide(guidename,this.userData._id);
+    
+    }
         })
         .catch((err) => console.log(err));
+        
     },
+    GetGuide(title,id) {
+      console.log(title);
+      console.log(id);
+      guideService
+        .getGuideTitleId(title,id)
+
+        .then((res) => {
+          this.guide = res.data.guide.map((guide) => ({
+            ...guide,
+          }));
+         
+          console.log(this.guide)
+        })
+        .catch((err) => console.log(err));
+        
+    },
+   
   },
+
 };
 </script>
 
@@ -59,7 +91,7 @@ export default {
     @role-updated="handleRoleUpdated"
   />
   <h1>Ecrire Guide</h1>
-  <EditGuide :userData="userData" />
+  <CreateGuide :userData="userData" />
 </template>
 
 <style>

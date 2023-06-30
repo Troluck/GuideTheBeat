@@ -1,11 +1,17 @@
 <script>
+import { ref, watch } from "vue";
+import { useToast } from "vue-toastification";
+import "vue-toastification/dist/index.css";
 import { accountService } from "../_services/account.service";
 import { categoryService } from "../_services/category.service";
 import { userService } from "../_services/user.service";
+
 export default {
   name: "ModalRegister",
   props: ["modaleOpen", "toogleModale", "userData"],
+
   data() {
+    
     return {
       user: {
         username: this.userData.username,
@@ -15,12 +21,15 @@ export default {
       },
       categories: [],
       isChecked: false,
+      toast:null,
     };
   },
   mounted() {
     this.AllCategory();
     console.log(this.userData.username);
     console.log(this.userData._id);
+    this.toast = useToast();
+   
   },
   methods: {
     AllCategory() {
@@ -44,6 +53,8 @@ export default {
         .updateUser(this.userData._id, this.user)
         .then((res) => {
           console.log(res.data);
+          this.toast.success('Vos données ont été modifiées avec succès !');
+
         })
         .catch((err) => console.log(err));
       this.$emit("role-updated", this.user.role);
@@ -118,22 +129,85 @@ export default {
             <span>{{ category.label }}</span>
           </label>
         </div>
-        <div class="form-group editorDiv">
-          <label>Voulez être rédacteur ?</label>
-          <input
-            type="checkbox"
-            class="form-control-editor"
-            v-model="user.isEditor"
-          />
-        </div>
-
-        <input type="submit" class="form-submit" value="Modifier" />
+        <div class="editorDiv">
+          <p class="editorText">Mode rédacteur</p>
+        <label class="toggle">
+  <input type="checkbox" class="form-control-editor" v-model="user.isEditor" />
+  <span class="toggle-button"></span>
+</label>
+</div>
+        <input type="submit" class="form-submitEdit" value="Modifier" />
       </form>
+      <button class="guide-button">Mes guides</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+.form-submitEdit {
+  background-color: var(--color-secondary);
+  border: none;
+  text-align: center;
+  padding: 10px;
+  font-size: 5vw;
+  width: 50%;
+  border-radius: 30px;
+  outline: none;
+  cursor: pointer;
+  font-family: "Josefin Sans", sans-serif;
+}
+.editorText {
+  font-size: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 17px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.toggle-button {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 30px;
+  height: 30px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.toggle input[type="checkbox"]:checked + .toggle-button {
+  transform: translateX(26px);
+  background-color: #14f195;
+}
+
+.toggle input[type="checkbox"] {
+  display: none;
+}
+
+.guide-button {
+  margin-top: 5% ;
+  background-color: var(--color-primary );
+  color: var(--color-text-light);
+  border: none;
+  text-align: center;
+  padding: 10px;
+  font-size: 5vw;
+  width: 50%;
+  border-radius: 30px;
+  outline: none;
+  cursor: pointer;
+  font-family: "Josefin Sans", sans-serif;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -194,8 +268,7 @@ export default {
 }
 
 .categoryDiv {
-  margin-top: 5%;
-  margin-bottom: 5%;
+  margin: 5% 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -206,6 +279,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .form-control-editor {
@@ -226,9 +300,19 @@ export default {
 }
 
 /* Responsive Styles */
+
 @media (min-width: 768px) {
   .overlay {
     width: 60%;
+  }
+  
+  .form-control {
+    width: 80%;
+  }
+  
+  .form-submit,
+  .guide-button {
+    width: 40%;
   }
 }
 

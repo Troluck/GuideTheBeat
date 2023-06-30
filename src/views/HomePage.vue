@@ -16,6 +16,7 @@ export default {
       modalOpen: false,
       isEditor: false,
       ImgUrlGuide: "http://localhost:3000/",
+      showUserGuides: true,
     };
   },
   mounted() {
@@ -26,6 +27,22 @@ export default {
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
+
+    GetUserGuides() {
+    if (this.showUserGuides) {
+      this.guides = this.guides.filter(guide => this.isUserGuide(guide));
+    } else {
+      this.GetAllGuides();
+    }
+    this.showUserGuides = !this.showUserGuides;
+  },
+
+  isUserGuide(guide) {
+    return guide.user._id === this.userData._id;
+  },
+   
+
+
     GetUser() {
       userService
         .getUser()
@@ -36,6 +53,7 @@ export default {
           }));
           this.userData = this.userData[0];
           this.isEditor = this.userData.role === "editor";
+          console.log(userData.guide);
         })
         .catch((err) => console.log(err));
     },
@@ -50,12 +68,24 @@ export default {
 
         .catch((err) => console.log(err));
     },
+    isUserGuide(guide) {
+    return guide.user._id === this.userData._id;
+  },
+  
     handleRoleUpdated(newRole) {
       this.isEditor = newRole === "editor";
     },
-    goToEditGuidePage() {
-      this.$router.push("/editGuide");
-    },
+    goToEditGuidePage(guidename) {
+      if (guidename) {
+        const formattedGuidename = guidename.replace(/ /g, "-");
+      console.log(formattedGuidename);
+    this.$router.push(`/editGuide/${formattedGuidename}`);
+    
+    
+  } else {
+    this.$router.push("/editGuide");
+  }
+},
     goToGuidePage(guideId) {
       this.$router.push(`/guide/${guideId}`);
     },
@@ -68,8 +98,11 @@ export default {
     <div class="headerHome">
       <img src="../../public/img/logo.svg.svg" class="logo" />
 
-      <button v-if="isEditor" @click="goToEditGuidePage" class="guideButton">
+      <button v-if="isEditor" @click="goToEditGuidePage()" class="guideButton">
         Ecrire guide
+      </button>
+      <button v-if="isEditor"  class="guideButton" @click="GetUserGuides()">
+        {{ showUserGuides ?"Mes guides":"Tous les guides" }}
       </button>
       <div class="profil" @click="toogleModale">
         <p class="usernameText">
@@ -89,20 +122,30 @@ export default {
       class="cardGuide"
       v-for="guide in guides"
       @click="goToGuidePage(guide._id)"
+
     >
+    <div class="topCard">
       <span class="categoryGuide">#{{ guide.category[0].label }}</span>
+      <span class=" myGuide"  @click="goToGuidePage()" v-if="guide.user._id == userData._id">Mon Guide</span>
+    </div>  
       <h3 class="titleGuide">{{ guide.title }}</h3>
       <div class="imgGuide-container">
         <img class="imgGuide" :src="ImgUrlGuide + guide.img" />
       </div>
 
-      <p class="subtitleGuide">{{ guide.subtitle }}</p>
-      <span class="userGuide">{{ guide.user.username }}</span>
+      <p class="subtitleGuide">{{ guide.subtitle }}</p> 
+      <img  @click.stop="goToEditGuidePage(guide.title)"  class="userGuide modifyButton" v-if="guide.user._id == userData._id" src="../../public/img/modifyIcon.svg"/>
+      <span v-else class="userGuide">{{ guide.user.username }}</span>
     </div>
   </div>
 </template>
 
 <style>
+.topCard{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
 .imgGuide-container {
   height: 50vw;
   overflow: hidden;
@@ -131,6 +174,11 @@ export default {
 .categoryGuide {
   align-self: flex-start;
   margin-left: 5%;
+  margin-top: 5%;
+}
+.myGuide {
+  align-self: flex-end;
+  margin-right: 5%;
   margin-top: 5%;
 }
 .titleGuide {
