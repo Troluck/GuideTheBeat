@@ -11,7 +11,6 @@ export default {
   props: ["modaleOpen", "toogleModale", "userData"],
 
   data() {
-    
     return {
       user: {
         username: this.userData.username,
@@ -21,7 +20,7 @@ export default {
       },
       categories: [],
       isChecked: false,
-      toast:null,
+      toast: null,
     };
   },
   mounted() {
@@ -29,7 +28,6 @@ export default {
     console.log(this.userData.username);
     console.log(this.userData._id);
     this.toast = useToast();
-   
   },
   methods: {
     AllCategory() {
@@ -53,8 +51,7 @@ export default {
         .updateUser(this.userData._id, this.user)
         .then((res) => {
           console.log(res.data);
-          this.toast.success('Vos données ont été modifiées avec succès !');
-
+          this.toast.success("Vos données ont été modifiées avec succès !");
         })
         .catch((err) => console.log(err));
       this.$emit("role-updated", this.user.role);
@@ -131,11 +128,15 @@ export default {
         </div>
         <div class="editorDiv">
           <p class="editorText">Mode rédacteur</p>
-        <label class="toggle">
-  <input type="checkbox" class="form-control-editor" v-model="user.isEditor" />
-  <span class="toggle-button"></span>
-</label>
-</div>
+          <label class="toggle">
+            <input
+              type="checkbox"
+              class="form-control-editor"
+              v-model="user.isEditor"
+            />
+            <span class="toggle-button"></span>
+          </label>
+        </div>
         <input type="submit" class="form-submitEdit" value="Modifier" />
       </form>
       <button class="guide-button">Mes guides</button>
@@ -144,7 +145,6 @@ export default {
 </template>
 
 <style scoped>
-
 .form-submitEdit {
   background-color: var(--color-secondary);
   border: none;
@@ -194,8 +194,8 @@ export default {
 }
 
 .guide-button {
-  margin-top: 5% ;
-  background-color: var(--color-primary );
+  margin-top: 5%;
+  background-color: var(--color-primary);
   color: var(--color-text-light);
   border: none;
   text-align: center;
@@ -305,11 +305,11 @@ export default {
   .overlay {
     width: 60%;
   }
-  
+
   .form-control {
     width: 80%;
   }
-  
+
   .form-submit,
   .guide-button {
     width: 40%;

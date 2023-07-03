@@ -3,8 +3,8 @@ import { guideService } from "../_services/guide.service";
 import { categoryService } from "../_services/category.service";
 import Editor from "@tinymce/tinymce-vue";
 export default {
-  name: "CreateGuide",
-  props: ["userData"],
+  name: "EditGuide",
+  props: ["userData", "guideData"],
   components: {
     editor: Editor,
   },
@@ -14,14 +14,15 @@ export default {
         _id: this.userData._id,
       },
       guide: {
-        title: "",
-        image: null,
-        subtitle: "",
-        content: "",
+        title: this.guideData.username,
+        image: this.guideData.image,
+        subtitle: this.guideData.subtitle,
+        content: this.guideData.content,
         user: "",
         category: [],
       },
       categories: [],
+      ImgUrlGuide: "http://localhost:3000/",
       isChecked: false,
     };
   },
@@ -30,27 +31,10 @@ export default {
       const file = event.target.files[0];
       this.guide.image = file;
     },
-
-    addGuide() {
-      this.guide.user = this.user._id;
-      this.guide.category = this.categories
-        .filter((category) => category.isChecked)
-        .map((category) => category._id);
-      const formData = new FormData();
-      formData.append("title", this.guide.title);
-      formData.append("subtitle", this.guide.subtitle);
-      formData.append("content", this.guide.content);
-      formData.append("category", this.guide.category);
-      formData.append("image", this.guide.image);
-      formData.append("user", this.guide.user);
-      // formData.append("user", this.guide.user);
-      guideService
-        .addGuide(formData)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err));
+    isCategoryChecked(categoryId) {
+      return this.guide.category.includes(categoryId);
     },
+
     AllCategory() {
       categoryService
         .getAllCategory()
@@ -74,6 +58,20 @@ export default {
         }
       },
     },
+    guideData: {
+      immediate: true,
+      handler(newGuideData) {
+        if (newGuideData && newGuideData.length > 0) {
+          this.guide.title = newGuideData[0].title;
+          this.guide.subtitle = newGuideData[0].subtitle;
+          this.guide.content = newGuideData[0].content;
+          this.guide.img = newGuideData[0].img;
+          this.guide.category = newGuideData[0].category;
+          console.log(this.guide.category[0]._id);
+          console.log(this.categories);
+        }
+      },
+    },
   },
 };
 </script>
@@ -86,12 +84,16 @@ export default {
     <div class="categoryDiv">
       <label
         class="checkbox-button"
-        :class="{ checked: category.isChecked }"
-        v-for="category in categories"
-        :key="category._id"
+        :class="{ checked: guide.category.includes(categorie._id) }"
+        v-for="categorie in categories"
+        :key="categorie._id"
       >
-        <input type="checkbox" v-model="category.isChecked" />
-        <span>{{ category.label }}</span>
+        <input
+          type="checkbox"
+          v-model="guide.category"
+          :value="categorie._id"
+        />
+        <span>{{ categorie.label }}</span>
       </label>
     </div>
     <div>
@@ -103,6 +105,7 @@ export default {
         @change="handleImageUpload"
         required
       />
+      <img class="imgGuide" :src="ImgUrlGuide + guide.img" />
     </div>
     <div>
       <label for="subtitle">Sous-titre:</label>

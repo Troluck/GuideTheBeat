@@ -3,29 +3,28 @@ import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import ModalProfil from "../components/ModalProfil.vue";
 import CreateGuide from "../components/CreateGuide.vue";
+import EditGuide from "../components/EditGuide.vue";
 import { guideService } from "../_services/guide.service";
 export default {
   name: "EditGuidePage",
   components: {
     CreateGuide: CreateGuide,
+    EditGuide: EditGuide,
     modale: ModalProfil,
   },
   data() {
     return {
       token: null,
       userData: [],
-      guide:[],
+      guideData: [],
       modalOpen: false,
       isEditor: false,
     };
   },
   mounted() {
     this.GetUser();
-   
-    
   },
   methods: {
-   
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
@@ -39,37 +38,32 @@ export default {
           }));
           this.userData = this.userData[0];
           this.isEditor = this.userData.role === "editor";
-          
-          if (this.$route.params.hasOwnProperty('guidename')) {
-           const formattedGuidename = this.$route.params.guidename;
-           const guidename = formattedGuidename.replace(/-/g, "%20");
-           console.log(this.userData._id);
-           this.GetGuide(guidename,this.userData._id);
-    
-    }
+
+          if (this.$route.path.includes("/editGuide/")) {
+            const formattedGuidename = this.$route.params.guidename;
+            const guidename = formattedGuidename.replace(/-/g, "%20");
+            console.log(this.userData._id);
+            this.GetGuide(guidename, this.userData._id);
+          }
         })
         .catch((err) => console.log(err));
-        
     },
-    GetGuide(title,id) {
+    GetGuide(title, id) {
       console.log(title);
       console.log(id);
       guideService
-        .getGuideTitleId(title,id)
+        .getGuideTitleId(title, id)
 
         .then((res) => {
-          this.guide = res.data.guide.map((guide) => ({
+          this.guideData = res.data.guide.map((guide) => ({
             ...guide,
           }));
-         
-          console.log(this.guide)
+
+          console.log(this.guideData);
         })
         .catch((err) => console.log(err));
-        
     },
-   
   },
-
 };
 </script>
 
@@ -88,10 +82,14 @@ export default {
     :userData="userData"
     :modaleOpen="modalOpen"
     :toogleModale="toogleModale"
-    @role-updated="handleRoleUpdated"
   />
   <h1>Ecrire Guide</h1>
-  <CreateGuide :userData="userData" />
+  <EditGuide
+    :userData="userData"
+    :guideData="guideData"
+    v-if="$route.path.match(/^\/editGuide\/[^/]+$/)"
+  />
+  <CreateGuide :userData="userData" v-else />
 </template>
 
 <style>
