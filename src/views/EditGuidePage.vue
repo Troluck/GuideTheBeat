@@ -19,6 +19,7 @@ export default {
       categories: [],
       modalOpen: false,
       isEditor: false,
+      ImgUrlGuide: "http://localhost:3000/",
     };
   },
   mounted() {
@@ -64,6 +65,10 @@ export default {
           console.log(this.guideData._id);
         })
         .catch((err) => console.log(err));
+    },
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      this.guide.image = file;
     },
 
     AllCategory() {
@@ -159,14 +164,9 @@ export default {
       </label>
     </div>
     <div>
+      <img class="imgGuide" :src="ImgUrlGuide + guideData.img" />
       <label for="img">Image:</label>
-      <input
-        type="file"
-        id="image"
-        name="image"
-        @change="handleImageUpload"
-        required
-      />
+      <input type="file" id="image" name="image" @change="handleImageUpload" />
     </div>
     <div>
       <label for="subtitle">Sous-titre:</label>

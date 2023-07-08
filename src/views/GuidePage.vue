@@ -1,22 +1,44 @@
 <script>
 import { guideService } from "../_services/guide.service";
+import { CommentService } from "../_services/comment.service";
+import { userService } from "../_services/user.service";
+import { format } from "date-fns";
 
 export default {
   name: "GuidePage",
   data() {
     return {
+      userData: [],
       guide: [],
       user: {},
       category: {},
+      comment: null,
+      commentData: {
+        text: "",
+        guide: "",
+        user: "",
+      },
       ImgUrlGuide: "http://localhost:3000/",
     };
   },
   mounted() {
     const id = this.$route.params.id;
     console.log(id);
+    this.GetUser();
     this.getGuide(id);
+    this.getCommentGuide(id);
   },
   methods: {
+    GetUser() {
+      userService
+        .getUser()
+        .then((res) => {
+          this.userData = res.data.user.map((user) => ({
+            ...user,
+          }));
+        })
+        .catch((err) => console.log(err));
+    },
     getGuide(id) {
       guideService
         .getGuide(id)
@@ -24,8 +46,35 @@ export default {
           this.guide = res.data.guide[0];
           this.user = res.data.guide[0].user;
           this.category = res.data.guide[0].category[0];
+
+          console.log(this.guide);
         })
         .catch((err) => console.log(err));
+    },
+    getCommentGuide(id) {
+      CommentService.getCommentGuide(id)
+        .then((res) => {
+          this.comment = res.data.commentguide;
+
+          console.log(this.comment);
+        })
+        .catch((err) => console.log(err));
+    },
+
+    addComment() {
+      this.commentData.guide = this.guide._id;
+      this.commentData.user = this.userData[0]._id;
+
+      CommentService.addComment(this.commentData)
+        .then((res) => {
+          console.log(res.data);
+          this.getCommentGuide(this.$route.params.id);
+        })
+        .catch((err) => console.log(err));
+    },
+    formatDate(dateTime) {
+      const formattedDate = format(new Date(dateTime), "dd/MM/yyyy");
+      return `${formattedDate}`;
     },
   },
 };
@@ -47,6 +96,19 @@ export default {
         <span class="userGuide">{{ user.username }}</span>
         <div class="contentGuide">
           <div class="contentGuideP" v-html="guide.content"></div>
+        </div>
+        <div class="commentDiv">
+          <form @submit.prevent="addComment">
+            <label for="comment">Ecrire un commentaire:</label>
+            <input type="text" id="comment" v-model="commentData.text" />
+            <input type="submit" class="form-submit" value="ajouter" />
+          </form>
+          <div class="comment">
+            <div class="cardGuide" v-for="comments in comment">
+              {{ comments.text }} {{ comments.user.username }}
+              {{ formatDate(comments.user.createdAt) }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
