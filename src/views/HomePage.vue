@@ -29,19 +29,17 @@ export default {
     },
 
     GetUserGuides() {
-    if (this.showUserGuides) {
-      this.guides = this.guides.filter(guide => this.isUserGuide(guide));
-    } else {
-      this.GetAllGuides();
-    }
-    this.showUserGuides = !this.showUserGuides;
-  },
+      if (this.showUserGuides) {
+        this.guides = this.guides.filter((guide) => this.isUserGuide(guide));
+      } else {
+        this.GetAllGuides();
+      }
+      this.showUserGuides = !this.showUserGuides;
+    },
 
-  isUserGuide(guide) {
-    return guide.user._id === this.userData._id;
-  },
-   
-
+    isUserGuide(guide) {
+      return guide.user._id === this.userData._id;
+    },
 
     GetUser() {
       userService
@@ -69,23 +67,24 @@ export default {
         .catch((err) => console.log(err));
     },
     isUserGuide(guide) {
-    return guide.user._id === this.userData._id;
-  },
-  
+      return guide.user._id === this.userData._id;
+    },
+
     handleRoleUpdated(newRole) {
       this.isEditor = newRole === "editor";
     },
     goToEditGuidePage(guidename) {
       if (guidename) {
         const formattedGuidename = guidename.replace(/ /g, "-");
-      console.log(formattedGuidename);
-    this.$router.push(`/editGuide/${formattedGuidename}`);
-    
-    
-  } else {
-    this.$router.push("/editGuide");
-  }
-},
+        console.log(formattedGuidename);
+        this.$router.push(`/editGuide/${formattedGuidename}`);
+      } else {
+        this.$router.push("/editGuide");
+      }
+    },
+    goToCreateGuidePage() {
+      this.$router.push(`/createguide`);
+    },
     goToGuidePage(guideId) {
       this.$router.push(`/guide/${guideId}`);
     },
@@ -98,11 +97,15 @@ export default {
     <div class="headerHome">
       <img src="../../public/img/logo.svg.svg" class="logo" />
 
-      <button v-if="isEditor" @click="goToEditGuidePage()" class="guideButton">
+      <button
+        v-if="isEditor"
+        @click="goToCreateGuidePage()"
+        class="guideButton"
+      >
         Ecrire guide
       </button>
-      <button v-if="isEditor"  class="guideButton" @click="GetUserGuides()">
-        {{ showUserGuides ?"Mes guides":"Tous les guides" }}
+      <button v-if="isEditor" class="guideButton" @click="GetUserGuides()">
+        {{ showUserGuides ? "Mes guides" : "Tous les guides" }}
       </button>
       <div class="profil" @click="toogleModale">
         <p class="usernameText">
@@ -122,26 +125,35 @@ export default {
       class="cardGuide"
       v-for="guide in guides"
       @click="goToGuidePage(guide._id)"
-
     >
-    <div class="topCard">
-      <span class="categoryGuide">#{{ guide.category[0].label }}</span>
-      <span class=" myGuide"  @click="goToGuidePage()" v-if="guide.user._id == userData._id">Mon Guide</span>
-    </div>  
+      <div class="topCard">
+        <span class="categoryGuide">#{{ guide.category[0].label }}</span>
+        <span
+          class="myGuide"
+          @click="goToGuidePage()"
+          v-if="guide.user._id == userData._id"
+          >Mon Guide</span
+        >
+      </div>
       <h3 class="titleGuide">{{ guide.title }}</h3>
       <div class="imgGuide-container">
         <img class="imgGuide" :src="ImgUrlGuide + guide.img" />
       </div>
 
-      <p class="subtitleGuide">{{ guide.subtitle }}</p> 
-      <img  @click.stop="goToEditGuidePage(guide.title)"  class="userGuide modifyButton" v-if="guide.user._id == userData._id" src="../../public/img/modifyIcon.svg"/>
+      <p class="subtitleGuide">{{ guide.subtitle }}</p>
+      <img
+        @click.stop="goToEditGuidePage(guide.title)"
+        class="userGuide modifyButton"
+        v-if="guide.user._id == userData._id"
+        src="../../public/img/modifyIcon.svg"
+      />
       <span v-else class="userGuide">{{ guide.user.username }}</span>
     </div>
   </div>
 </template>
 
 <style>
-.topCard{
+.topCard {
   display: flex;
   width: 100%;
   justify-content: space-between;

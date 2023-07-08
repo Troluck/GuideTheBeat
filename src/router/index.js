@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LandingPage from "../views/LandingPage.vue";
 import HomePage from "../views/HomePage.vue";
 import EditGuidePage from "../views/EditGuidePage.vue";
+import CreateGuidePage from "../views/CreateGuidePage.vue";
 import GuidePage from "../views/GuidePage.vue";
 
 const router = createRouter({
@@ -16,6 +17,11 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: HomePage,
+    },
+    {
+      path: "/createguide",
+      name: "CreateGuide",
+      component: CreateGuidePage,
     },
     {
       path: "/editGuide/:guidename?",

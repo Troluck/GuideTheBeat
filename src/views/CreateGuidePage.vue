@@ -1,18 +1,20 @@
 <script>
+import { accountService } from "../_services/account.service";
+import { userService } from "../_services/user.service";
+import ModalProfil from "../components/ModalProfil.vue";
 import { guideService } from "../_services/guide.service";
 import { categoryService } from "../_services/category.service";
 import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "CreateGuide",
-  props: ["userData"],
   components: {
+    modale: ModalProfil,
     editor: Editor,
   },
   data() {
     return {
-      user: {
-        _id: this.userData._id,
-      },
+      token: null,
+      userData: [],
       guide: {
         title: "",
         image: null,
@@ -22,17 +24,41 @@ export default {
         category: [],
       },
       categories: [],
-      isChecked: false,
+      modalOpen: false,
+      isEditor: false,
     };
   },
+  mounted() {
+    this.GetUser();
+    this.AllCategory();
+  },
+
   methods: {
+    toogleModale: function () {
+      this.modalOpen = !this.modalOpen;
+    },
+    GetUser() {
+      userService
+        .getUser()
+
+        .then((res) => {
+          this.userData = res.data.user.map((user) => ({
+            ...user,
+          }));
+          this.userData = this.userData[0];
+          this.isEditor = this.userData.role === "editor";
+          console.log(this.userData);
+        })
+        .catch((err) => console.log(err));
+    },
+
     handleImageUpload(event) {
       const file = event.target.files[0];
       this.guide.image = file;
     },
 
     addGuide() {
-      this.guide.user = this.user._id;
+      this.guide.user = this.userData._id;
       this.guide.category = this.categories
         .filter((category) => category.isChecked)
         .map((category) => category._id);
@@ -40,7 +66,9 @@ export default {
       formData.append("title", this.guide.title);
       formData.append("subtitle", this.guide.subtitle);
       formData.append("content", this.guide.content);
-      formData.append("category", this.guide.category);
+      for (const categoryId of this.guide.category) {
+        formData.append("category[]", categoryId);
+      }
       formData.append("image", this.guide.image);
       formData.append("user", this.guide.user);
       // formData.append("user", this.guide.user);
@@ -62,22 +90,26 @@ export default {
         .catch((err) => console.log(err));
     },
   },
-  mounted() {
-    this.AllCategory();
-  },
-  watch: {
-    userData: {
-      immediate: true,
-      handler(newUserData) {
-        if (newUserData) {
-          this.user._id = newUserData._id;
-        }
-      },
-    },
-  },
 };
 </script>
+
 <template>
+  <header>
+    <div class="headerHome">
+      <img src="../../public/img/logo.svg.svg" class="logo" />
+      <div class="profil" @click="toogleModale">
+        <p class="usernameText">
+          {{ userData.username ? userData.username.charAt(0) : "" }}
+        </p>
+      </div>
+    </div>
+  </header>
+  <modale
+    :userData="userData"
+    :modaleOpen="modalOpen"
+    :toogleModale="toogleModale"
+  />
+  <h1>Créer Guide</h1>
   <form @submit.prevent="addGuide" enctype="multipart/form-data">
     <div>
       <label for="title">Titre:</label>
@@ -157,5 +189,69 @@ export default {
   border-radius: 50px;
   display: flex;
   justify-content: center;
+}
+@media (max-width: 767px) {
+  .headerHome {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 7%;
+    margin-right: 7%;
+    margin-top: 5%;
+  }
+  h1 {
+    text-align: center;
+  }
+
+  .logo {
+    width: 6vh;
+  }
+
+  .profil {
+    background-color: red;
+    width: 5vh;
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .guideButton {
+    margin: 0;
+    padding: 2%;
+  }
+
+  .usernameText {
+    font-size: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 5%;
+  }
+
+  .logo {
+    width: 8vh;
+  }
+
+  .profil {
+    background-color: red;
+    width: 6vh;
+    height: 6vh;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .usernameText {
+    font-size: 120%;
+  }
 }
 </style>
