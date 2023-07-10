@@ -214,7 +214,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 5%;
+  border-radius: 10px;
   box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
   background-color: var(--color-primary);
   cursor: pointer;

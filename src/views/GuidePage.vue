@@ -55,7 +55,9 @@ export default {
       CommentService.getCommentGuide(id)
         .then((res) => {
           this.comment = res.data.commentguide;
-
+          this.commentData.text = "";
+          let textarea = this.$refs["inputComment"];
+          textarea.style.height = "18px";
           console.log(this.comment);
         })
         .catch((err) => console.log(err));
@@ -75,6 +77,11 @@ export default {
     formatDate(dateTime) {
       const formattedDate = format(new Date(dateTime), "dd/MM/yyyy");
       return `${formattedDate}`;
+    },
+    resize() {
+      let element = this.$refs["inputComment"];
+      element.style.height = "25px";
+      element.style.height = element.scrollHeight + "px";
     },
   },
 };
@@ -97,18 +104,33 @@ export default {
         <div class="contentGuide">
           <div class="contentGuideP" v-html="guide.content"></div>
         </div>
-        <div class="commentDiv">
-          <form @submit.prevent="addComment">
-            <label for="comment">Ecrire un commentaire:</label>
-            <input type="text" id="comment" v-model="commentData.text" />
-            <input type="submit" class="form-submit" value="ajouter" />
-          </form>
-          <div class="comment">
-            <div class="cardGuide" v-for="comments in comment">
-              {{ comments.text }} {{ comments.user.username }}
+        <div class="commentDiv"></div>
+      </div>
+      <h3 style="color: var(--color-text-light); font-size: 30px">
+        Commentaires
+      </h3>
+      <form class="addComment" @submit.prevent="addComment">
+        <label for="comment"></label>
+
+        <textarea
+          @input="resize()"
+          ref="inputComment"
+          class="inputComment"
+          id="comment"
+          v-model="commentData.text"
+        ></textarea>
+
+        <input type="submit" class="form-submit" value="ajouter" />
+      </form>
+      <div class="comment">
+        <div class="cardGuide" v-for="comments in comment">
+          <div class="topComment">
+            <div class="nameComment">{{ comments.user.username }}</div>
+            <div class="dateComment">
               {{ formatDate(comments.user.createdAt) }}
             </div>
           </div>
+          <div class="bottomComment">{{ comments.text }}</div>
         </div>
       </div>
     </div>
@@ -119,6 +141,8 @@ export default {
   margin-top: 15%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .cardGuideSolo {
   max-width: 90%;
@@ -127,9 +151,57 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 1%;
+  border-radius: 15px;
   box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.addComment {
+  margin-bottom: 10%;
+  text-align: center;
+  align-items: center;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+.inputComment {
+  background-color: var(--color-text-light);
+  height: 25px;
+  border-radius: 5vw;
+  width: 100%;
+  outline: none;
+  margin-bottom: 3%;
+  color: var(--color-text-black);
+  font-size: 130%;
+  padding-left: 5%;
+
+  word-wrap: break-word;
+  resize: none;
+}
+.topComment {
+  margin-top: 5%;
+  margin-left: 5%;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.bottomComment {
+  display: flex;
+  align-self: flex-start;
+  margin-left: 3%;
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+.cardGuide {
+  width: 100%;
 }
 .contentGuideP span {
   max-width: 800px;
