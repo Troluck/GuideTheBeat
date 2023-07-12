@@ -88,6 +88,17 @@ export default {
     goToGuidePage(guideId) {
       this.$router.push(`/guide/${guideId}`);
     },
+    displayRating(rating) {
+      const fullStar = '<i class="fas fa-star"></i>';
+      const emptyStar = '<i class="far fa-star"></i>';
+      const roundedRating = Math.round(rating);
+
+      const stars = fullStar.repeat(roundedRating);
+
+      const emptyStars = emptyStar.repeat(5 - roundedRating);
+
+      return `${stars}${emptyStars}`;
+    },
   },
 };
 </script>
@@ -141,18 +152,43 @@ export default {
       </div>
 
       <p class="subtitleGuide">{{ guide.subtitle }}</p>
-      <img
-        @click.stop="goToEditGuidePage(guide.title)"
-        class="userGuide modifyButton"
-        v-if="guide.user._id == userData._id"
-        src="../../public/img/modifyIcon.svg"
-      />
-      <span v-else class="userGuide">{{ guide.user.username }}</span>
+      <div class="card-bottom">
+        <img
+          @click.stop="goToEditGuidePage(guide.title)"
+          class="userGuide modifyButton"
+          v-if="guide.user._id == userData._id"
+          src="../../public/img/modifyIcon.svg"
+        />
+        <span v-else class="userGuide">{{ guide.user.username }}</span>
+        <div class="notation">
+          <div
+            class="starNotation"
+            v-html="displayRating(guide.averageRating)"
+          ></div>
+          <span class="">{{ guide.rating.length }} notes</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style>
+.fas.fa-star,
+.far.fa-star {
+  color: gold;
+}
+.card-bottom {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  width: 100%;
+}
+.notation {
+  margin-left: 5%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
 .topCard {
   display: flex;
   width: 100%;
