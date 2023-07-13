@@ -3,6 +3,7 @@ import { guideService } from "../_services/guide.service";
 import { CommentService } from "../_services/comment.service";
 import { userService } from "../_services/user.service";
 import { format } from "date-fns";
+import { RatingService } from "../_services/rating.service";
 
 export default {
   name: "GuidePage",
@@ -18,19 +19,32 @@ export default {
         guide: "",
         user: "",
       },
+      ratingData: {
+        rate: null,
+        guide: "",
+        user: "",
+      },
+      userRating: null,
       ImgUrlGuide: "http://localhost:3000/",
+      selectedRating: null,
+      hasrated: false,
     };
   },
-  mounted() {
-    const id = this.$route.params.id;
-    console.log(id);
-    this.GetUser();
-    this.getGuide(id);
-    this.getCommentGuide(id);
+  async mounted() {
+    try {
+      const id = this.$route.params.id;
+      console.log(id);
+      await this.GetUser();
+      this.getGuide(id);
+      this.getCommentGuide(id);
+      this.getRatingGuide();
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     GetUser() {
-      userService
+      return userService
         .getUser()
         .then((res) => {
           this.userData = res.data.user.map((user) => ({
@@ -74,6 +88,38 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+
+    addRating(index) {
+      this.ratingData.rate = index;
+      this.ratingData.guide = this.guide._id;
+      this.ratingData.user = this.userData[0]._id;
+      RatingService.addRating(this.ratingData)
+        .then((res) => {
+          console.log(res.data);
+          this.getRatingGuide();
+          this.hasrated = true;
+        })
+        .catch((err) => console.log(err));
+    },
+
+    getRatingGuide() {
+      RatingService.getRatingGuide(this.$route.params.id)
+        .then((res) => {
+          console.log(res.data);
+
+          const userRating = res.data.ratingguide.find(
+            (rating) => rating.user === this.userData[0]._id
+          );
+
+          if (userRating) {
+            console.log("Vous avez déjà noté ce guide");
+            this.userRating = userRating;
+            this.hasRatedGuide = true;
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+
     formatDate(dateTime) {
       const formattedDate = format(new Date(dateTime), "dd/MM/yyyy");
       return `${formattedDate}`;
@@ -83,6 +129,17 @@ export default {
       element.style.height = "25px";
       element.style.height = element.scrollHeight + "px";
     },
+    displayRating(rating) {
+      const fullStar = '<i class="fas fa-star"></i>';
+      const emptyStar = '<i class="far fa-star"></i>';
+      const roundedRating = Math.round(rating);
+
+      const stars = fullStar.repeat(roundedRating);
+
+      const emptyStars = emptyStar.repeat(5 - roundedRating);
+
+      return `${stars}${emptyStars}`;
+    },
   },
 };
 </script>
@@ -91,6 +148,7 @@ export default {
     <header>
       <img src="../../public/img/logo.svg.svg" class="logo" />
     </header>
+
     <div class="guide-container">
       <div class="cardGuideSolo">
         <span class="categoryGuide">#{{ category.label }}</span>
@@ -104,8 +162,32 @@ export default {
         <div class="contentGuide">
           <div class="contentGuideP" v-html="guide.content"></div>
         </div>
-        <div class="commentDiv"></div>
       </div>
+      <div class="rating">
+        <div v-if="!userRating && !hasrated">
+          <i
+            v-for="index in 5"
+            :key="index"
+            class="fa fa-star"
+            :class="{ filled: index <= selectedRating }"
+            @mouseover="selectedRating = index"
+            @mouseleave="selectedRating = index"
+            @click="addRating(index)"
+          ></i>
+        </div>
+        <div v-else-if="hasrated">Merci pour la notation</div>
+        <div v-else>Vous avez déja noté ce guide</div>
+      </div>
+      <div class="globalNotation">
+        <div
+          class="starNotation"
+          v-html="displayRating(guide.averageRating)"
+        ></div>
+        <span v-if="guide.rating !== undefined"
+          >{{ guide.rating.length }} notes</span
+        >
+      </div>
+
       <h3 style="color: var(--color-text-light); font-size: 30px">
         Commentaires
       </h3>
@@ -137,6 +219,9 @@ export default {
   </div>
 </template>
 <style scoped>
+.filled {
+  color: gold;
+}
 .guide-container {
   margin-top: 15%;
   display: flex;

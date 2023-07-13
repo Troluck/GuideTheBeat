@@ -2,11 +2,11 @@
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import { guideService } from "../_services/guide.service";
-import ModalProfil from "../components/ModalProfil.vue";
+import ModalProfil1 from "../components/ModalProfil1.vue";
 export default {
   name: "HomePage",
   components: {
-    modale: ModalProfil,
+    modale: ModalProfil1,
   },
   data() {
     return {
@@ -17,6 +17,7 @@ export default {
       isEditor: false,
       ImgUrlGuide: "http://localhost:3000/",
       showUserGuides: true,
+      searchQuery: "",
     };
   },
   mounted() {
@@ -100,6 +101,23 @@ export default {
       return `${stars}${emptyStars}`;
     },
   },
+  computed: {
+    filteredGuides() {
+      return this.guides.filter(
+        (guide) =>
+          guide.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          guide.subtitle
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          guide.category[0].label
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          guide.user.username
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+      );
+    },
+  },
 };
 </script>
 
@@ -108,7 +126,7 @@ export default {
     <div class="headerHome">
       <img src="../../public/img/logo.svg.svg" class="logo" />
 
-      <button
+      <!-- <button
         v-if="isEditor"
         @click="goToCreateGuidePage()"
         class="guideButton"
@@ -117,24 +135,34 @@ export default {
       </button>
       <button v-if="isEditor" class="guideButton" @click="GetUserGuides()">
         {{ showUserGuides ? "Mes guides" : "Tous les guides" }}
-      </button>
+      </button> -->
       <div class="profil" @click="toogleModale">
         <p class="usernameText">
           {{ userData.username ? userData.username.charAt(0) : "" }}
         </p>
       </div>
     </div>
+    <modale
+      :userData="userData"
+      :modaleOpen="modalOpen"
+      :toogleModale="toogleModale"
+    />
   </header>
-  <modale
+  <!-- <modale
     :userData="userData"
     :modaleOpen="modalOpen"
     :toogleModale="toogleModale"
     @role-updated="handleRoleUpdated"
-  />
+  /> -->
+  <div class="search-div">
+    <div class="search-bar">
+      <input type="text" placeholder="Rechercher..." v-model="searchQuery" />
+    </div>
+  </div>
   <div class="cardList">
     <div
       class="cardGuide"
-      v-for="guide in guides"
+      v-for="guide in filteredGuides"
       @click="goToGuidePage(guide._id)"
     >
       <div class="topCard">
@@ -169,10 +197,50 @@ export default {
         </div>
       </div>
     </div>
+    <div class="overlay" v-if="modalOpen" @click="toogleModale"></div>
   </div>
 </template>
 
 <style>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 4;
+}
+.search-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+.search-bar {
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 80%;
+}
+
+.search-bar input[type="text"] {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-bar::before {
+  content: "\f002";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  padding: 10px;
+  color: gray;
+  background-color: transparent;
+}
+
 .fas.fa-star,
 .far.fa-star {
   color: gold;

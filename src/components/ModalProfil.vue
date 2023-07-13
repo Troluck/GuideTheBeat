@@ -139,7 +139,6 @@ export default {
         </div>
         <input type="submit" class="form-submitEdit" value="Modifier" />
       </form>
-      <button class="guide-button">Mes guides</button>
     </div>
   </div>
 </template>
