@@ -1,12 +1,13 @@
 <script>
 import { accountService } from "../_services/account.service";
 import ModalRegister from "../components/ModalRegister.vue";
-
+import footer from "../components/footer.vue";
 
 export default {
   name: "LandingPage",
   components: {
     modale: ModalRegister,
+    footerPage: footer,
   },
   data() {
     return {
@@ -16,6 +17,7 @@ export default {
       },
 
       modalOpen: false,
+      errorMessage: "",
     };
   },
   methods: {
@@ -30,7 +32,11 @@ export default {
           accountService.saveToken(res.data.token);
           this.$router.push("/home");
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          this.errorMessage =
+            "Erreur lors de la connexion. Veuillez vérifier vos informations.";
+        });
     },
   },
 };
@@ -39,97 +45,75 @@ export default {
 <template>
   <header>
     <img src="../../public/img/logo.svg.svg" class="logo" />
+
     <h1>Guide the Beat</h1>
   </header>
-
-  <div class="content">
-    <div class="card1">
-      <h2>Connexion</h2>
-
-      <form @submit.prevent="login" class="formConnect">
-        <div class="form-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="email"
-            v-model="user.email"
-          />
-        </div>
-
-        <div class="form-group">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="password"
-            v-model="user.password"
-          />
-        </div>
-        <input
-          type="submit"
-          class="form-submit"
-          placeholder="connexion"
-          value="se connecter"
-        />
-      </form>
-      <div>
-        <p class="buttonLog" @click="toogleModale">
-          pas de compte ? Incrivez vous
-        </p>
-
-        <modale
-          v-bind:modaleOpen="modalOpen"
-          v-bind:toogleModale="toogleModale"
-        />
-      </div>
-    </div>
-    <div class="imgdiv" style="z-index: 0">
+  <div class="body-content">
+    <div class="image-left">
       <img src="../../img/radio1.png" class="img1" />
     </div>
+    <div class="content">
+      <div class="card1">
+        <h2>Connexion</h2>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <form @submit.prevent="login" class="formConnect">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="email"
+              v-model="user.email"
+            />
+          </div>
 
-    <div class="part2">
-      <div class="imgdiv2" style="z-index: 0">
-        <img src="../../img/clavier2.png" class="img2" />
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="password"
+              v-model="user.password"
+            />
+          </div>
+          <input
+            type="submit"
+            class="form-submit"
+            placeholder="connexion"
+            value="se connecter"
+          />
+        </form>
+        <div>
+          <p class="buttonLog" @click="toogleModale">
+            pas de compte ? Incrivez vous
+          </p>
+
+          <modale
+            v-bind:modaleOpen="modalOpen"
+            v-bind:toogleModale="toogleModale"
+          />
+        </div>
       </div>
       <div class="card2">
         <h2 class="h2Bis">
           Le site de guides communautaires autour de la musique
         </h2>
-        <div class="line"></div>
+        <!-- <div class="line"></div> -->
+
+        <img src="../../img/clavier2.png" class="img2" />
         <p class="card2-p">
           Vous voulez apprendre ou faire apprendre un instrument, de la MAO, ou
           tout simplement la culture musical, ce site est fait pour vous
         </p>
       </div>
     </div>
-    <footer>
-      <img src="../../img/CdPlayer.png" class="img3" />
-      <div class="footerLink">
-        <button class="button1">MAGASIN</button>
-        <button class="button2">MENTIONS LEGALES</button>
-        <p class="pBottom">GUIDE THE BEAT 2023</p>
-      </div>
-    </footer>
+    <div class="image-right">
+      <img src="../../public/img/CompoDJ.png" class="img2" />
+    </div>
   </div>
+  <footerPage />
 </template>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap");
-
-/* Couleurs */
-:root {
-  --color-primary: #14f195;
-  --color-secondary: #eb54bc;
-  --color-tertiary: #80ecff;
-  --color-text-light: #f3f3f3;
-  --color-text-dark: #1d2121;
-  --color-background: #1d2121;
-}
-
-/* Général */
-body {
-  background-color: var(--color-background);
-  font-family: "Josefin Sans", sans-serif;
-}
 
 /* En-tête et pied de page */
 header,
@@ -145,13 +129,60 @@ header {
 }
 
 footer {
-  margin-top: 20%;
+  margin-top: 5%;
+}
+.body-content {
+  display: flex;
+  justify-content: center;
+}
+.image-left,
+.image-right {
+  width: 35%;
+  text-align: center;
+}
+.image-right {
+  align-self: flex-end;
+}
+@media (max-width: 1200px) {
+  .body-content .content {
+    width: 80vw;
+  }
+  .image-left,
+  .image-right {
+    display: none;
+  }
+}
+.img1 {
+  width: 70%;
+}
+.img2 {
+  width: 70%;
 }
 
-.footerLink {
+.content {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  width: 30%;
+}
+.card1,
+.card2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 30px;
+  box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.card1 {
+  background-color: var(--color-primary);
+  width: 100%;
+  margin-bottom: 10%;
+}
+
+.card2 {
+  background-color: var(--color-secondary);
+  width: 100%;
 }
 
 /* Boutons */
@@ -159,17 +190,6 @@ button {
   font-size: 90%;
   padding-left: 5%;
   margin-bottom: 10%;
-}
-
-.button1,
-.button2 {
-  color: var(--color-text-light);
-  text-align: center;
-  padding: 10px;
-  width: 100%;
-  border-radius: 30px;
-  outline: none;
-  cursor: pointer;
 }
 
 .button1 {
@@ -180,7 +200,6 @@ button {
   background-color: var(--color-primary);
 }
 
-/* Textes */
 h1,
 h2,
 p {
@@ -202,39 +221,8 @@ h2 {
   font-size: 100%;
 }
 
-/* Contenu */
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Logo */
 .logo {
   width: 20vh;
-}
-
-/* Cartes */
-.card1,
-.card2 {
-  width: 90vmin;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 5%;
-  box-shadow: 8px 5px 5px rgba(0, 0, 0, 0.25);
-}
-
-.card1 {
-  background-color: var(--color-primary);
-}
-
-.card2 {
-  background-color: var(--color-secondary);
-  margin-top: 5vmin;
-}
-.part2 {
-  margin-top: -20%;
 }
 
 .card2-p {
@@ -254,7 +242,8 @@ h2 {
   background-color: var(--color-background);
   width: 80%;
   height: 50px;
-  border-radius: 50px;
+  border-radius: 30px;
+  border: none;
   outline: none;
   margin-bottom: 3%;
   color: var(--color-text-light);
@@ -263,7 +252,7 @@ h2 {
 }
 
 ::placeholder {
-  color: var(--color-text-light);
+  color: var(--color-text-light-grey);
 }
 
 .form-submit {
@@ -272,18 +261,18 @@ h2 {
   text-align: center;
   padding: 10px;
   width: 50%;
+  font-size: 120%;
   border-radius: 30px;
   outline: none;
   cursor: pointer;
   font-family: "Josefin Sans", sans-serif;
 }
 
-/* Autres */
 .buttonLog {
   color: var(--color-text-dark);
-  margin-bottom: 25vmin;
   margin-top: 10%;
-  font-size: 4vmin;
+  margin-bottom: 20%;
+  font-size: 2vh;
   cursor: pointer;
 }
 
@@ -295,36 +284,15 @@ h2 {
 }
 
 .line {
-  background-color: var(--color-background);
+  background-color: var(--color-text-light);
   width: 90%;
   height: 8px;
   border-radius: 50px;
 }
-
-/* Images */
-.img1 {
-  height: 100%;
-  width: 100%;
-}
-
-.img2 {
-  width: 85vmin;
-}
-
-.img3 {
-  width: 50vmin;
-}
-
-.imgdiv {
-  position: relative;
-  height: 40vmin;
-  top: -20vmin;
-}
-
-.imgdiv2 {
-  position: relative;
+.error-message {
+  color: red;
+  margin-top: 10px;
   text-align: center;
-  height: 40vmin;
-  top: 15vmin;
+  font-size: 15px;
 }
 </style>

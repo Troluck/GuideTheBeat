@@ -3,10 +3,12 @@ import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import { guideService } from "../_services/guide.service";
 import ModalProfil1 from "../components/ModalProfil1.vue";
+import footer from "../components/footer.vue";
 export default {
   name: "HomePage",
   components: {
     modale: ModalProfil1,
+    footerPage: footer,
   },
   data() {
     return {
@@ -199,9 +201,10 @@ export default {
     </div>
     <div class="overlay" v-if="modalOpen" @click="toogleModale"></div>
   </div>
+  <footerPage />
 </template>
 
-<style>
+<style scoped>
 .overlay {
   position: fixed;
   top: 0;
