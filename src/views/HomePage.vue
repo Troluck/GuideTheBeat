@@ -2,12 +2,12 @@
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import { guideService } from "../_services/guide.service";
-import ModalProfil1 from "../components/ModalProfil1.vue";
+import header from "../components/header.vue";
 import footer from "../components/footer.vue";
 export default {
   name: "HomePage",
   components: {
-    modale: ModalProfil1,
+    HeaderPage: header,
     footerPage: footer,
   },
   data() {
@@ -21,6 +21,12 @@ export default {
       showUserGuides: true,
       searchQuery: "",
     };
+  },
+  beforeMount() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push("/");
+    }
   },
   mounted() {
     this.GetUser();
@@ -108,15 +114,11 @@ export default {
       return this.guides.filter(
         (guide) =>
           guide.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          guide.subtitle
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase()) ||
+          guide.subtitle.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           guide.category[0].label
             .toLowerCase()
             .includes(this.searchQuery.toLowerCase()) ||
-          guide.user.username
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase())
+          guide.user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
@@ -124,38 +126,7 @@ export default {
 </script>
 
 <template>
-  <header>
-    <div class="headerHome">
-      <img src="../../public/img/logo.svg.svg" class="logo" />
-
-      <!-- <button
-        v-if="isEditor"
-        @click="goToCreateGuidePage()"
-        class="guideButton"
-      >
-        Ecrire guide
-      </button>
-      <button v-if="isEditor" class="guideButton" @click="GetUserGuides()">
-        {{ showUserGuides ? "Mes guides" : "Tous les guides" }}
-      </button> -->
-      <div class="profil" @click="toogleModale">
-        <p class="usernameText">
-          {{ userData.username ? userData.username.charAt(0) : "" }}
-        </p>
-      </div>
-    </div>
-    <modale
-      :userData="userData"
-      :modaleOpen="modalOpen"
-      :toogleModale="toogleModale"
-    />
-  </header>
-  <!-- <modale
-    :userData="userData"
-    :modaleOpen="modalOpen"
-    :toogleModale="toogleModale"
-    @role-updated="handleRoleUpdated"
-  /> -->
+  <HeaderPage />
   <div class="search-div">
     <div class="search-bar">
       <input type="text" placeholder="Rechercher..." v-model="searchQuery" />
@@ -191,10 +162,7 @@ export default {
         />
         <span v-else class="userGuide">{{ guide.user.username }}</span>
         <div class="notation">
-          <div
-            class="starNotation"
-            v-html="displayRating(guide.averageRating)"
-          ></div>
+          <div class="starNotation" v-html="displayRating(guide.averageRating)"></div>
           <span class="">{{ guide.rating.length }} notes</span>
         </div>
       </div>
@@ -328,28 +296,6 @@ export default {
 }
 
 @media (max-width: 767px) {
-  .headerHome {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-left: 7%;
-    margin-right: 7%;
-    margin-top: 5%;
-  }
-
-  .logo {
-    width: 6vh;
-  }
-
-  .profil {
-    background-color: red;
-    width: 5vh;
-    height: 5vh;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-  }
   .guideButton {
     margin: 0;
     padding: 2%;

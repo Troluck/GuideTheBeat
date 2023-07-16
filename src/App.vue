@@ -22,4 +22,10 @@ body {
   font-family: "Josefin Sans", sans-serif;
   margin: 0;
 }
+.Vue-Toastification__toast {
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
 </style>

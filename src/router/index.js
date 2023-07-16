@@ -4,6 +4,7 @@ import HomePage from "../views/HomePage.vue";
 import EditGuidePage from "../views/EditGuidePage.vue";
 import CreateGuidePage from "../views/CreateGuidePage.vue";
 import GuidePage from "../views/GuidePage.vue";
+import ProfilPage from "../views/ProfilPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,12 @@ const router = createRouter({
       name: "GuidePage",
       component: GuidePage,
     },
+    {
+      path: "/profilPage",
+      name: "ProfilPage",
+      component: ProfilPage,
+    },
+
     {
       path: "/about",
       name: "about",

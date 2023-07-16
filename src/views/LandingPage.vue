@@ -18,12 +18,14 @@ export default {
 
       modalOpen: false,
       errorMessage: "",
+      passwordVisible: false,
     };
   },
   methods: {
     toogleModale: function () {
       this.modalOpen = !this.modalOpen;
     },
+
     login() {
       accountService
         .login(this.user)
@@ -37,6 +39,9 @@ export default {
           this.errorMessage =
             "Erreur lors de la connexion. Veuillez vérifier vos informations.";
         });
+    },
+    togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible;
     },
   },
 };
@@ -68,11 +73,15 @@ export default {
 
           <div class="form-group">
             <input
-              type="password"
+              :type="passwordVisible ? 'text' : 'password'"
               class="form-control"
               placeholder="password"
               v-model="user.password"
             />
+            <span class="toggle-password" @click="togglePasswordVisibility">
+              <i v-if="passwordVisible" class="fas fa-eye-slash"></i>
+              <i v-else class="fas fa-eye"></i>
+            </span>
           </div>
           <input
             type="submit"
@@ -82,26 +91,18 @@ export default {
           />
         </form>
         <div>
-          <p class="buttonLog" @click="toogleModale">
-            pas de compte ? Incrivez vous
-          </p>
+          <p class="buttonLog" @click="toogleModale">pas de compte ? Incrivez vous</p>
 
-          <modale
-            v-bind:modaleOpen="modalOpen"
-            v-bind:toogleModale="toogleModale"
-          />
+          <modale v-bind:modaleOpen="modalOpen" v-bind:toogleModale="toogleModale" />
         </div>
       </div>
       <div class="card2">
-        <h2 class="h2Bis">
-          Le site de guides communautaires autour de la musique
-        </h2>
-        <!-- <div class="line"></div> -->
+        <h2 class="h2Bis">Le site de guides communautaires autour de la musique</h2>
 
         <img src="../../img/clavier2.png" class="img2" />
         <p class="card2-p">
-          Vous voulez apprendre ou faire apprendre un instrument, de la MAO, ou
-          tout simplement la culture musical, ce site est fait pour vous
+          Vous voulez apprendre ou faire apprendre un instrument, de la MAO, ou tout
+          simplement la culture musical, ce site est fait pour vous
         </p>
       </div>
     </div>
@@ -201,8 +202,7 @@ button {
 }
 
 h1,
-h2,
-p {
+h2 {
   font-size: 5vh;
   font-family: "Josefin Sans", sans-serif;
 }
@@ -250,6 +250,16 @@ h2 {
   font-size: 120%;
   padding-left: 5%;
 }
+.form-group {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  top: 25%;
+  right: 12%;
+  color: white;
+  cursor: pointer;
+}
 
 ::placeholder {
   color: var(--color-text-light-grey);
@@ -263,6 +273,7 @@ h2 {
   width: 50%;
   font-size: 120%;
   border-radius: 30px;
+  margin-bottom: 7%;
   outline: none;
   cursor: pointer;
   font-family: "Josefin Sans", sans-serif;

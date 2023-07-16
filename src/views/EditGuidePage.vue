@@ -1,16 +1,18 @@
 <script>
 import { categoryService } from "../_services/category.service";
 import { userService } from "../_services/user.service";
-import ModalProfil from "../components/ModalProfil.vue";
 import { guideService } from "../_services/guide.service";
 import { useToast } from "vue-toastification";
 import Editor from "@tinymce/tinymce-vue";
+import header from "../components/header.vue";
+import footer from "../components/footer.vue";
 export default {
   name: "EditGuidePage",
   components: {
-    modale: ModalProfil,
-    editor: Editor,
+    HeaderPage: header,
+    footerPage: footer,
   },
+
   data() {
     return {
       token: null,
@@ -21,6 +23,12 @@ export default {
       isEditor: false,
       ImgUrlGuide: "http://localhost:3000/",
     };
+  },
+  beforeMount() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push("/");
+    }
   },
   mounted() {
     this.GetUser();
@@ -98,9 +106,7 @@ export default {
         this.guideData.category &&
         Array.isArray(this.guideData.category)
       ) {
-        return this.guideData.category.some(
-          (category) => category._id === categoryId
-        );
+        return this.guideData.category.some((category) => category._id === categoryId);
       }
     },
     toggleCategory(categoryId) {
@@ -126,21 +132,8 @@ export default {
 </script>
 
 <template>
-  <header>
-    <div class="headerHome">
-      <img src="../../public/img/logo.svg.svg" class="logo" />
-      <div class="profil" @click="toogleModale">
-        <p class="usernameText">
-          {{ userData.username ? userData.username.charAt(0) : "" }}
-        </p>
-      </div>
-    </div>
-  </header>
-  <modale
-    :userData="userData"
-    :modaleOpen="modalOpen"
-    :toogleModale="toogleModale"
-  />
+  <HeaderPage />
+  <modale :userData="userData" :modaleOpen="modalOpen" :toogleModale="toogleModale" />
   <h1>Modifier votre Guide</h1>
   <form @submit.prevent="UpdateGuide" enctype="multipart/form-data">
     <div>
@@ -194,6 +187,7 @@ export default {
       <button type="submit">Enregistrer</button>
     </div>
   </form>
+  <footerPage />
 </template>
 
 <style scoped>

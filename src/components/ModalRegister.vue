@@ -1,6 +1,9 @@
 <script>
 import { accountService } from "../_services/account.service";
+import { userService } from "../_services/user.service";
 import { categoryService } from "../_services/category.service";
+import { useToast } from "vue-toastification";
+import "vue-toastification/dist/index.css";
 export default {
   name: "ModalRegister",
   props: ["modaleOpen", "toogleModale"],
@@ -14,11 +17,20 @@ export default {
         category: [],
       },
       categories: [],
-      isChecked: false,
+
+      isEmailValid: true,
+      hasDigit: false,
+      hasUppercase: false,
+      hasSpecialChar: false,
+      hasMinLength: false,
+      toast: null,
+      isUserNameExist: null,
+      passwordVisible: false,
     };
   },
   mounted() {
     this.AllCategory();
+    this.toast = useToast();
   },
   methods: {
     register() {
@@ -32,9 +44,24 @@ export default {
         .register(this.user)
         .then((res) => {
           console.log(res.data);
-          this.$emit("toogleModale");
+          this.toogleModale(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          if (err.response && err.response.status === 421) {
+            this.toast.error("l'utilisateur existe déja ");
+          }
+          if (err.response && err.response.status === 420) {
+            this.toast.error("l'email existe déja ");
+          }
+          if (err.response && err.response.status === 422) {
+            this.toast.error("mot de passe non conforme");
+          }
+          if (err.response && err.response.status === 423) {
+            this.toast.error("email non conforme");
+          }
+          this.validateEmail();
+        });
     },
 
     AllCategory() {
@@ -46,6 +73,25 @@ export default {
           }));
         })
         .catch((err) => console.log(err));
+    },
+    validateEmail() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.isEmailValid = emailRegex.test(this.user.email);
+      if (!this.isEmailValid) {
+        this.toast.error("email non conforme ");
+      }
+    },
+    togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible;
+    },
+  },
+  computed: {
+    isPasswordValid() {
+      const password = this.user.password;
+      this.hasDigit = /\d/.test(password);
+      this.hasUppercase = /[A-Z]/.test(password);
+      this.hasSpecialChar = /\W/.test(password);
+      this.hasMinLength = password.length >= 8;
     },
   },
 };
@@ -62,6 +108,7 @@ export default {
             class="form-control"
             v-model="user.username"
             placeholder="Nom"
+            required
           />
         </div>
 
@@ -71,18 +118,38 @@ export default {
             class="form-control"
             v-model="user.email"
             placeholder="E-mail"
+            required
           />
         </div>
 
         <div class="form-group">
           <input
-            type="password"
             class="form-control"
             v-model="user.password"
             placeholder="mot de passe"
+            @input="isPasswordValid"
+            :type="passwordVisible ? 'text' : 'password'"
+            required
           />
+          <span class="toggle-password" @click="togglePasswordVisibility">
+            <i v-if="passwordVisible" class="fas fa-eye-slash"></i>
+            <i v-else class="fas fa-eye"></i>
+          </span>
         </div>
-
+        <div class="password-validation">
+          <div :class="{ 'green-text': hasDigit, 'red-text': !hasDigit }">
+            Au moins un chiffre
+          </div>
+          <div :class="{ 'green-text': hasUppercase, 'red-text': !hasUppercase }">
+            Au moins une majuscule
+          </div>
+          <div :class="{ 'green-text': hasSpecialChar, 'red-text': !hasSpecialChar }">
+            Au moins un caractère special
+          </div>
+          <div :class="{ 'green-text': hasMinLength, 'red-text': !hasMinLength }">
+            Au moins 8 caractères
+          </div>
+        </div>
         <h3>Choisissez vos catégories préférés</h3>
         <div class="categoryDiv">
           <label
@@ -95,13 +162,12 @@ export default {
             <span>{{ category.label }}</span>
           </label>
         </div>
-        <div class="form-group editorDiv">
-          <label>Voulez être rédacteur ?</label>
-          <input
-            type="checkbox"
-            class="form-control-editor"
-            v-model="user.role"
-          />
+        <div class="editorDiv">
+          <h3 class="editorText">Voulez vous être redacteur ?</h3>
+          <label class="toggle">
+            <input type="checkbox" class="form-control-editor" v-model="user.role" />
+            <span class="toggle-button"></span>
+          </label>
         </div>
 
         <input type="submit" class="form-submit" value="S'inscrire" />
@@ -111,6 +177,23 @@ export default {
 </template>
 
 <style scoped>
+.form-group {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  top: 25%;
+  right: 12%;
+  color: white;
+  cursor: pointer;
+}
+
+.red-text {
+  color: red;
+}
+.green-text {
+  color: green;
+}
 .modal {
   position: fixed;
   top: 0;
@@ -132,6 +215,24 @@ export default {
   position: fixed;
   border-radius: 5%;
   width: 80%;
+}
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 17px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.toggle input[type="checkbox"]:checked + .toggle-button {
+  transform: translateX(26px);
+  background-color: #14f195;
+}
+
+.toggle input[type="checkbox"] {
+  display: none;
 }
 
 .formRegister {
@@ -158,6 +259,32 @@ export default {
   justify-content: center;
 }
 
+.editorDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5%;
+}
+.toggle-button {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 30px;
+  height: 30px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.toggle input[type="checkbox"]:checked + .toggle-button {
+  transform: translateX(26px);
+  background-color: #14f195;
+}
+
+.toggle input[type="checkbox"] {
+  display: none;
+}
+
 .checkbox-button input[type="checkbox"] {
   display: none;
 }
@@ -177,12 +304,6 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   flex-direction: column;
-}
-
-.editorDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .form-control-editor {

@@ -1,15 +1,18 @@
 <script>
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
-import ModalProfil from "../components/ModalProfil.vue";
 import { guideService } from "../_services/guide.service";
 import { categoryService } from "../_services/category.service";
 import Editor from "@tinymce/tinymce-vue";
+import header from "../components/header.vue";
+import footer from "../components/footer.vue";
+
 export default {
   name: "CreateGuide",
   components: {
-    modale: ModalProfil,
     editor: Editor,
+    HeaderPage: header,
+    footerPage: footer,
   },
   data() {
     return {
@@ -27,6 +30,12 @@ export default {
       modalOpen: false,
       isEditor: false,
     };
+  },
+  beforeMount() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push("/");
+    }
   },
   mounted() {
     this.GetUser();
@@ -94,21 +103,8 @@ export default {
 </script>
 
 <template>
-  <header>
-    <div class="headerHome">
-      <img src="../../public/img/logo.svg.svg" class="logo" />
-      <div class="profil" @click="toogleModale">
-        <p class="usernameText">
-          {{ userData.username ? userData.username.charAt(0) : "" }}
-        </p>
-      </div>
-    </div>
-  </header>
-  <modale
-    :userData="userData"
-    :modaleOpen="modalOpen"
-    :toogleModale="toogleModale"
-  />
+  <HeaderPage />
+  <modale :userData="userData" :modaleOpen="modalOpen" :toogleModale="toogleModale" />
   <h1>Créer Guide</h1>
   <form @submit.prevent="addGuide" enctype="multipart/form-data">
     <div>
@@ -128,13 +124,7 @@ export default {
     </div>
     <div>
       <label for="img">Image:</label>
-      <input
-        type="file"
-        id="image"
-        name="image"
-        @change="handleImageUpload"
-        required
-      />
+      <input type="file" id="image" name="image" @change="handleImageUpload" required />
     </div>
     <div>
       <label for="subtitle">Sous-titre:</label>
@@ -162,6 +152,7 @@ export default {
       <button type="submit">Enregistrer</button>
     </div>
   </form>
+  <footerPage />
 </template>
 
 <style scoped>

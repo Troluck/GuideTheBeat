@@ -4,9 +4,14 @@ import { CommentService } from "../_services/comment.service";
 import { userService } from "../_services/user.service";
 import { format } from "date-fns";
 import { RatingService } from "../_services/rating.service";
-
+import header from "../components/header.vue";
+import footer from "../components/footer.vue";
 export default {
   name: "GuidePage",
+  components: {
+    HeaderPage: header,
+    footerPage: footer,
+  },
   data() {
     return {
       userData: [],
@@ -29,6 +34,12 @@ export default {
       selectedRating: null,
       hasrated: false,
     };
+  },
+  beforeMount() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push("/");
+    }
   },
   async mounted() {
     try {
@@ -144,11 +155,8 @@ export default {
 };
 </script>
 <template>
+  <HeaderPage />
   <div class="guidePage">
-    <header>
-      <img src="../../public/img/logo.svg.svg" class="logo" />
-    </header>
-
     <div class="guide-container">
       <div class="cardGuideSolo">
         <span class="categoryGuide">#{{ category.label }}</span>
@@ -179,18 +187,11 @@ export default {
         <div v-else>Vous avez déja noté ce guide</div>
       </div>
       <div class="globalNotation">
-        <div
-          class="starNotation"
-          v-html="displayRating(guide.averageRating)"
-        ></div>
-        <span v-if="guide.rating !== undefined"
-          >{{ guide.rating.length }} notes</span
-        >
+        <div class="starNotation" v-html="displayRating(guide.averageRating)"></div>
+        <span v-if="guide.rating !== undefined">{{ guide.rating.length }} notes</span>
       </div>
 
-      <h3 style="color: var(--color-text-light); font-size: 30px">
-        Commentaires
-      </h3>
+      <h3 style="color: var(--color-text-light); font-size: 30px">Commentaires</h3>
       <form class="addComment" @submit.prevent="addComment">
         <label for="comment"></label>
 
@@ -217,6 +218,7 @@ export default {
       </div>
     </div>
   </div>
+  <footerPage />
 </template>
 <style scoped>
 .filled {
@@ -292,6 +294,9 @@ export default {
   max-width: 800px;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+.contentGuideP p {
+  font-size: 20px;
 }
 .imgGuide-container {
   height: 50vw;
