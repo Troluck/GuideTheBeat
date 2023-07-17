@@ -113,25 +113,18 @@ export default {
   <footerPage />
 </template>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap");
 
 /* En-tête et pied de page */
-header,
-footer {
+header {
   display: flex;
   justify-content: center;
-}
-
-header {
   flex-direction: column;
   margin-top: 2vh;
   align-items: center;
 }
 
-footer {
-  margin-top: 5%;
-}
 .body-content {
   display: flex;
   justify-content: center;
@@ -193,14 +186,6 @@ button {
   margin-bottom: 10%;
 }
 
-.button1 {
-  background-color: var(--color-secondary);
-}
-
-.button2 {
-  background-color: var(--color-primary);
-}
-
 h1,
 h2 {
   font-size: 5vh;
@@ -214,11 +199,6 @@ h1 {
 h2 {
   font-size: 30px;
   color: var(--color-text-dark);
-}
-
-.pBottom {
-  color: var(--color-text-light);
-  font-size: 100%;
 }
 
 .logo {
@@ -294,12 +274,6 @@ h2 {
   text-align: center;
 }
 
-.line {
-  background-color: var(--color-text-light);
-  width: 90%;
-  height: 8px;
-  border-radius: 50px;
-}
 .error-message {
   color: red;
   margin-top: 10px;

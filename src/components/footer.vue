@@ -12,14 +12,21 @@ export default {
     <img src="../../img/CdPlayer.png" class="img3" />
 
     <div class="footerLink">
-      <button class="button1">MAGASIN</button>
+      <a href="http://guidethebeatgoodies.local/">
+        <button class="button1">MAGASIN</button>
+      </a>
       <button class="button2">MENTIONS LEGALES</button>
       <p class="pBottom">GUIDE THE BEAT 2023</p>
     </div>
   </footer>
 </template>
 
-<style>
+<style scoped>
+footer {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+}
 .img3 {
   width: 50vmin;
 }
@@ -38,6 +45,15 @@ export default {
   outline: none;
   cursor: pointer;
   border: none;
+  margin-bottom: 10%;
+}
+
+.button1 {
+  background-color: var(--color-secondary);
+}
+
+.button2 {
+  background-color: var(--color-primary);
 }
 .pBottom {
   color: var(--color-text-light);

@@ -185,12 +185,12 @@ export default {
 .search-div {
   display: flex;
   justify-content: center;
-  margin-top: 10%;
+  margin-top: 4%;
 }
 .search-bar {
   border: 1px solid white;
   border-radius: 5px;
-  width: 80%;
+  width: 30%;
 }
 
 .search-bar input[type="text"] {
@@ -294,44 +294,27 @@ export default {
   background-color: var(--color-primary);
   cursor: pointer;
 }
-
-@media (max-width: 767px) {
-  .guideButton {
-    margin: 0;
-    padding: 2%;
-  }
-
-  .usernameText {
-    font-size: 100%;
+@media (max-width: 1600px) {
+  .search-bar {
+    width: 40%;
   }
 }
-
-@media (min-width: 768px) {
-  header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-left: 10%;
-    margin-right: 10%;
+@media (max-width: 900px) {
+  .search-bar {
+    width: 60%;
+    margin-top: 4%;
+  }
+}
+@media (max-width: 600px) {
+  .search-bar {
+    width: 80%;
     margin-top: 5%;
   }
-
-  .logo {
-    width: 8vh;
-  }
-
-  .profil {
-    background-color: red;
-    width: 6vh;
-    height: 6vh;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .usernameText {
-    font-size: 120%;
+}
+@media (max-width: 400px) {
+  .search-bar {
+    width: 80%;
+    margin-top: 6%;
   }
 }
 </style>
