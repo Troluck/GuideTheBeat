@@ -150,7 +150,7 @@ export default {
             Au moins 8 caractères
           </div>
         </div>
-        <h3>Choisissez vos catégories préférés</h3>
+        <h3 class="titleCategory">Choisissez vos catégories préférés</h3>
         <div class="categoryDiv">
           <label
             class="checkbox-button"
@@ -163,7 +163,7 @@ export default {
           </label>
         </div>
         <div class="editorDiv">
-          <h3 class="editorText">Voulez vous être redacteur ?</h3>
+          <h3  class="editorText">Voulez vous être redacteur ?</h3>
           <label class="toggle">
             <input type="checkbox" class="form-control-editor" v-model="user.role" />
             <span class="toggle-button"></span>
@@ -194,6 +194,13 @@ export default {
 .green-text {
   color: green;
 }
+.titleCategory {
+  margin-bottom: 0;
+}
+.editorText{
+  margin-top: 0;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -365,6 +372,12 @@ export default {
   .overlay {
     width: 30%;
   }
+  .editorText{
+  margin: 0;
+}
+  .editorDiv {
+  flex-direction:row;
+}
 }
 
 @media (max-width: 480px) {

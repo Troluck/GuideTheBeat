@@ -4,7 +4,9 @@ export default {
 
   data() {},
   mounted() {},
-  methods: {},
+  methods: {
+   
+  },
 };
 </script>
 <template>
@@ -13,7 +15,7 @@ export default {
 
     <div class="footerLink">
       <a href="http://guidethebeatgoodies.local/">
-        <button class="button1">MAGASIN</button>
+        <button class="button1" >MAGASIN</button>
       </a>
       <button class="button2">MENTIONS LEGALES</button>
       <p class="pBottom">GUIDE THE BEAT 2023</p>

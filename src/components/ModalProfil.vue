@@ -48,7 +48,7 @@ export default {
         >
           Ecrire un guide
         </p>
-        <p v-if="userData.role === 'editor'">Mes Guides</p>
+       
         <div class="logout-div" @click="Logout()" style="cursor: pointer">
           Deconnexion
         </div>
