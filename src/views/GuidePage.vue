@@ -177,8 +177,8 @@ export default {
             <i
               v-for="index in 5"
               :key="index"
-              class="fa fa-star"
-              style="color: gold"
+              style="color: pointer"
+              class="fas fa-star"
               :class="{ filled: index <= selectedRating }"
               @mouseover="selectedRating = index"
               @mouseleave="selectedRating = index"
@@ -186,10 +186,10 @@ export default {
             ></i>
           </div>
         </div>
-        <div v-else-if="hasrated">Merci pour la notation</div>
-        <div v-else>Vous avez déja noté ce guide</div>
+        <div class="addRating" v-else-if="hasrated">Merci pour la notation</div>
+        <div class="addRating" v-else>Vous avez déja noté ce guide</div>
       </div>
-      <div class="globalNotation">
+      <div class="globalNotation addRating">
         <div class="starNotation" v-html="displayRating(guide.averageRating)"></div>
         <span v-if="guide.rating !== undefined">{{ guide.rating.length }} notes</span>
       </div>
