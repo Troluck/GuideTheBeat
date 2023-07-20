@@ -2,6 +2,7 @@
 import { accountService } from "../_services/account.service";
 import { userService } from "../_services/user.service";
 import { guideService } from "../_services/guide.service";
+import { useToast } from "vue-toastification";
 import { categoryService } from "../_services/category.service";
 import Editor from "@tinymce/tinymce-vue";
 import header from "../components/header.vue";
@@ -40,6 +41,7 @@ export default {
   mounted() {
     this.GetUser();
     this.AllCategory();
+    this.toast = useToast();
   },
 
   methods: {
@@ -85,6 +87,8 @@ export default {
         .addGuide(formData)
         .then((res) => {
           console.log(res.data);
+          this.toast.success("Votre guide à été crée avec succès !");
+          this.$router.push("/home");
         })
         .catch((err) => console.log(err));
     },
@@ -116,18 +120,23 @@ export default {
       />
 
       <div class="categoryDiv">
-        <label
-          class="checkbox-button"
-          :class="{ checked: category.isChecked }"
-          v-for="category in categories"
-          :key="category._id"
-        >
-          <input type="checkbox" v-model="category.isChecked" />
-          <span>{{ category.label }}</span>
-        </label>
+        <label>Choix Catégories</label>
+        <div>
+          <label
+            class="checkbox-button"
+            :class="{ checked: category.isChecked }"
+            v-for="category in categories"
+            :key="category._id"
+          >
+            <input type="checkbox" v-model="category.isChecked" />
+            <span>{{ category.label }}</span>
+          </label>
+        </div>
       </div>
       <div>
-        <label for="image" class="custom-file-label">Choisissez une image</label>
+        <label for="image" class="custom-file-label">
+          {{ guide.image ? guide.image.name : "Choisissez une image" }}</label
+        >
         <input type="file" id="image" name="image" @change="handleImageUpload" required />
       </div>
 
@@ -138,7 +147,7 @@ export default {
         v-model="guide.subtitle"
       ></textarea>
 
-      <div>
+      <div class="contenu-container">
         <label for="content">Contenu:</label>
         <editor
           id="content"
@@ -165,9 +174,12 @@ export default {
 </template>
 
 <style scoped>
+h1 {
+  color: var(--color-text-dark);
+}
 label {
   font-size: 20px;
-  color: var(--color-secondary);
+  color: var(--color-text-dark);
   margin-bottom: 2%;
 }
 .createGuide-container {
@@ -175,6 +187,10 @@ label {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: var(--color-tertiary);
+  margin-left: 20%;
+  margin-right: 20%;
+  border-radius: 20px;
 }
 .form-container {
   display: flex;
@@ -182,6 +198,14 @@ label {
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+.contenu-container {
+  width: 90%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .title-form {
   height: 50px;
@@ -204,10 +228,12 @@ label {
 }
 .categoryDiv {
   margin-top: 5%;
-  margin-bottom: 5%;
   padding: 5px;
+  width: 80%;
   display: flex;
   align-items: center;
+  display: flex;
+  flex-direction: column;
   overflow-x: auto;
   white-space: nowrap;
   background-color: var(--color-tertiary);
@@ -221,11 +247,13 @@ input[type="file"] {
 .custom-file-label {
   display: inline-block;
   padding: 10px 20px;
-  background-color: var(--color-tertiary);
-  color: var(--color-text-dark);
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 20%;
+  margin-bottom: 20%;
 }
 .checkbox-button input[type="checkbox"] {
   display: none;
@@ -256,6 +284,23 @@ input[type="file"] {
   margin-bottom: 7%;
   outline: none;
   cursor: pointer;
+  color: var(--color-text-light);
   font-family: "Josefin Sans", sans-serif;
+}
+@media (max-width: 900px) {
+  .createGuide-container {
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+@media (max-width: 600px) {
+  .createGuide-container {
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+  .form-control {
+    width: 90%;
+  }
 }
 </style>

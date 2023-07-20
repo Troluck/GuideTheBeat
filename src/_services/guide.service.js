@@ -17,6 +17,9 @@ function updateGuide(guideId, credential) {
   console.log(guideId, credential);
   return Axios.put(`/updateGuide/${guideId}`, credential);
 }
+function deleteGuide(guideId) {
+  return Axios.delete(`/deleteGuide/${guideId}`);
+}
 
 export const guideService = {
   getAllGuides,
@@ -24,4 +27,5 @@ export const guideService = {
   getGuide,
   getGuideTitleId,
   updateGuide,
+  deleteGuide,
 };

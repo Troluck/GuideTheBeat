@@ -141,7 +141,7 @@ export default {
       element.style.height = element.scrollHeight + "px";
     },
     displayRating(rating) {
-      const fullStar = '<i class="fas fa-star"></i>';
+      const fullStar = '<i class="fas fa-star" style="color:gold;"></i>';
       const emptyStar = '<i class="far fa-star"></i>';
       const roundedRating = Math.round(rating);
 
@@ -161,27 +161,30 @@ export default {
       <div class="cardGuideSolo">
         <span class="categoryGuide">#{{ category.label }}</span>
         <h3 class="titleGuide">{{ guide.title }}</h3>
+        <span class="userGuide">ecrit par {{ user.username }}</span>
         <div class="imgGuide-container" v-if="guide.img">
           <img class="imgGuide" :src="ImgUrlGuide + guide.img" />
         </div>
 
         <p class="subtitleGuide">{{ guide.subtitle }}</p>
-        <span class="userGuide">{{ user.username }}</span>
-        <div class="contentGuide">
-          <div class="contentGuideP" v-html="guide.content"></div>
-        </div>
+
+        <div class="contentGuideP" v-html="guide.content"></div>
       </div>
       <div class="rating">
-        <div v-if="!userRating && !hasrated">
-          <i
-            v-for="index in 5"
-            :key="index"
-            class="fa fa-star"
-            :class="{ filled: index <= selectedRating }"
-            @mouseover="selectedRating = index"
-            @mouseleave="selectedRating = index"
-            @click="addRating(index)"
-          ></i>
+        <div class="addRating" v-if="!userRating && !hasrated">
+          <p>Ajouter une note à ce guide</p>
+          <div>
+            <i
+              v-for="index in 5"
+              :key="index"
+              class="fa fa-star"
+              style="color: gold"
+              :class="{ filled: index <= selectedRating }"
+              @mouseover="selectedRating = index"
+              @mouseleave="selectedRating = index"
+              @click="addRating(index)"
+            ></i>
+          </div>
         </div>
         <div v-else-if="hasrated">Merci pour la notation</div>
         <div v-else>Vous avez déja noté ce guide</div>
@@ -209,9 +212,7 @@ export default {
         <div class="cardGuide" v-for="comments in comment">
           <div class="topComment">
             <div class="nameComment">{{ comments.user.username }}</div>
-            <div class="dateComment">
-              {{ formatDate(comments.user.createdAt) }}
-            </div>
+            <div class="dateComment">le {{ formatDate(comments.user.createdAt) }}</div>
           </div>
           <div class="bottomComment">{{ comments.text }}</div>
         </div>
@@ -221,18 +222,28 @@ export default {
   <footerPage />
 </template>
 <style scoped>
+.rating {
+  display: flex;
+}
+.addRating {
+  font-size: 150%;
+  color: var(--color-text-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .filled {
   color: gold;
 }
 .guide-container {
-  margin-top: 15%;
+  margin-top: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 .cardGuideSolo {
-  max-width: 90%;
+  width: 50%;
   margin-bottom: 5%;
   display: flex;
   flex-direction: column;
@@ -249,33 +260,44 @@ export default {
   align-items: center;
   width: 100%;
 }
+.form-submit {
+  background-color: var(--color-secondary);
+  border: none;
+  text-align: center;
+  padding: 10px;
+  font-size: 120%;
+  border-radius: 30px;
+  margin-bottom: 7%;
+  outline: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+  font-family: "Josefin Sans", sans-serif;
+}
 .addComment {
-  margin-bottom: 10%;
   text-align: center;
   align-items: center;
-  width: 80%;
+  width: 50%;
   display: flex;
   flex-direction: column;
 }
 .inputComment {
   background-color: var(--color-text-light);
-  height: 25px;
-  border-radius: 5vw;
-  width: 100%;
+  width: 50%;
+  border-radius: 30px;
+  border: none;
   outline: none;
   margin-bottom: 3%;
-  color: var(--color-text-black);
-  font-size: 130%;
-  padding-left: 5%;
-
-  word-wrap: break-word;
+  color: var(--color-text-dark);
+  font-size: 120%;
+  font-family: "Didact Gothic", sans-serif;
+  padding-left: 2%;
   resize: none;
+  min-height: 25px;
+  overflow-y: hidden;
 }
 .topComment {
   margin-top: 5%;
-  margin-left: 5%;
   display: flex;
-  justify-content: space-around;
   width: 100%;
 }
 
@@ -288,7 +310,15 @@ export default {
 }
 
 .cardGuide {
-  width: 100%;
+  width: 30%;
+  background-color: var(--color-primary);
+  padding-left: 1%;
+  padding-right: 1%;
+  border-radius: 20px;
+  margin-bottom: 2%;
+}
+.dateComment {
+  margin-left: 3%;
 }
 .contentGuideP span {
   max-width: 800px;
@@ -298,29 +328,43 @@ export default {
 .contentGuideP p {
   font-size: 20px;
 }
+.contentGuideP {
+  width: 90%;
+  font-size: 120%;
+}
 .imgGuide-container {
-  height: 50vw;
+  width: 80%;
+  height: 30%;
   overflow: hidden;
-  margin-top: -6vw;
-  margin-bottom: -8vw;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .imgGuide {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: flex;
+  object-fit: contain;
   clip-path: polygon(0 20%, 100% 20%, 100% 80%, 0 80%);
+  margin-top: -20%;
 }
 
 .userGuide {
-  font-size: 5vw;
+  font-size: 20px;
   align-self: flex-end;
   margin-right: 5%;
   margin-bottom: 5%;
 }
 
 .subtitleGuide {
-  font-size: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  width: 95%;
+  height: 20%;
+  font-size: 30px;
+  margin-top: -5%;
 }
 
 .categoryGuide {
@@ -329,50 +373,46 @@ export default {
   margin-top: 5%;
 }
 .titleGuide {
-  font-size: 8vw;
+  width: 90%;
+  font-size: 50px;
+  margin-bottom: 0;
+  height: 10%;
   text-align: center;
-  margin-bottom: 0%;
-  margin-top: 6%;
-}
-
-.cardList {
-  margin-top: 15%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-@media (max-width: 767px) {
-  .headerHome {
+@media (max-width: 1200px) {
+  .inputComment {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-left: 7%;
-    margin-right: 7%;
-    margin-top: 5%;
   }
-
-  .logo {
-    width: 6vh;
+  .addComment {
+    width: 50%;
   }
-
-  .profil {
-    background-color: red;
-    width: 5vh;
-    height: 5vh;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
+  .cardGuide {
+    width: 50%;
   }
-  .guideButton {
-    margin: 0;
-    padding: 2%;
+}
+@media (max-width: 900px) {
+  .cardGuide {
+    width: 50%;
   }
-
-  .usernameText {
-    font-size: 100%;
+}
+@media (max-width: 650px) {
+  .addComment {
+    width: 80%;
+  }
+  .inputComment {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .cardGuideSolo {
+    width: 95%;
+  }
+  .cardGuide {
+    width: 80%;
   }
 }
 </style>
