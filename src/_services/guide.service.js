@@ -3,11 +3,11 @@ import Axios from "./caller.service";
 function getAllGuides() {
   return Axios.get("/allGuides");
 }
-function getGuide(id) {
-  return Axios.get(`/getGuide/${id}`);
-}
 function getGuideTitleId(title, id) {
   return Axios.get(`/getGuide/${title}/${id}`);
+}
+function getGuide(id) {
+  return Axios.get(`/getGuide/${id}`);
 }
 function addGuide(credential) {
   console.log(credential);
