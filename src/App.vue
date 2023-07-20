@@ -6,6 +6,9 @@ import { RouterLink, RouterView } from "vue-router";
   <RouterView />
 </template>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap");
+
 /* Couleurs */
 :root {
   --color-primary: #14f195;

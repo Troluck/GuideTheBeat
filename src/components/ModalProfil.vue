@@ -23,29 +23,38 @@ export default {
     toProfilPage() {
       this.$router.push("/profilPage");
     },
+    closeModal() {
+      this.$emit("toogleModale");
+    },
   },
 };
 </script>
 <template>
-  <div class="modal" v-if="modaleOpen" style="z-index: 5">
-    <div class="modal-header">
-      <div class="profil-left">
-        <div class="profil">
-          <p class="usernameText">
-            {{ userData.username ? userData.username.charAt(0) : "" }}
-          </p>
+  <transition name="modal-slide">
+    <div class="modal" v-if="modaleOpen" style="z-index: 5">
+      <div class="modal-header">
+        <div class="profil-left">
+          <div class="profil"></div>
+          <p class="username">{{ userData.username }}</p>
         </div>
-        <p class="username">{{ userData.username }}</p>
+        <i class="fa-solid fa-xmark close" @click="toogleModale"></i>
       </div>
-      <i class="fa-solid fa-xmark close" @click="toogleModale"></i>
+      <div class="modal-middle">
+        <p @click="toProfilPage()" style="cursor: pointer">Modifier Profil</p>
+        <p
+          @click="toCreateGuide()"
+          v-if="userData.role === 'editor'"
+          style="cursor: pointer"
+        >
+          Ecrire un guide
+        </p>
+        <p v-if="userData.role === 'editor'">Mes Guides</p>
+        <div class="logout-div" @click="Logout()" style="cursor: pointer">
+          Deconnexion
+        </div>
+      </div>
     </div>
-    <div class="modal-middle">
-      <p @click="toProfilPage()">Modifier Profil</p>
-      <p @click="toCreateGuide()">Ecrire un guide</p>
-      <p>Mes Guides</p>
-      <div class="logout-div" @click="Logout()">Deconnexion</div>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <style scoped>
@@ -55,12 +64,24 @@ export default {
   right: 0%;
   top: 0%;
   min-width: 230px;
-  height: 100%;
-  background-color: var(--color-background);
+  height: 30%;
+  background-color: var(--color-secondary);
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
   color: white;
   animation-name: slidein;
   animation-duration: 300ms;
 }
+.modal-slide-enter-active,
+.modal-slide-leave-active {
+  transition: transform 300ms;
+}
+
+.modal-slide-enter,
+.modal-slide-leave-to {
+  transform: translateX(100%);
+}
+
 @keyframes slidein {
   from {
     transform: translateX(100%);

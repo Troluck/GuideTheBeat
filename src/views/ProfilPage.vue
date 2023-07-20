@@ -29,8 +29,6 @@ export default {
   mounted() {
     this.GetUser();
     this.AllCategory();
-    // console.log(this.userData.username);
-    // console.log(this.userData._id);
     this.toast = useToast();
   },
   methods: {
@@ -90,6 +88,9 @@ export default {
           }
         });
       this.$emit("role-updated", this.user.role);
+    },
+    toggleEditorMode() {
+      this.user.isEditor = !this.user.isEditor;
     },
   },
 
@@ -156,11 +157,16 @@ export default {
       <div class="editorDiv">
         <p class="editorText">Mode rédacteur</p>
         <label class="toggle">
-          <input type="checkbox" class="form-control-editor" />
+          <input
+            type="checkbox"
+            class="form-control-editor"
+            v-bind:checked="user.isEditor"
+            @change="toggleEditorMode"
+          />
           <span class="toggle-button"></span>
         </label>
       </div>
-      <input type="submit" class="form-submitEdit" value="Modifier" />
+      <input type="submit" class="form-submit" value="Modifier" />
     </form>
   </div>
   <footerPage />
@@ -169,7 +175,7 @@ export default {
 <style scoped>
 .profilDiv {
   background-color: var(--color-tertiary);
-  width: 90%;
+  width: 50%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 5%;
@@ -180,18 +186,30 @@ export default {
   text-align: center;
   border-radius: 30px;
 }
-.form-submitEdit {
+.form-submit {
   background-color: var(--color-secondary);
   border: none;
   text-align: center;
   padding: 10px;
-  font-size: 5vw;
-  margin-bottom: 5%;
   width: 50%;
+  font-size: 120%;
   border-radius: 30px;
+  margin-bottom: 7%;
   outline: none;
   cursor: pointer;
   font-family: "Josefin Sans", sans-serif;
+}
+.form-control {
+  background-color: var(--color-background);
+  width: 80%;
+  height: 50px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  margin-bottom: 3%;
+  color: var(--color-text-light);
+  font-size: 120%;
+  padding-left: 5%;
 }
 .editorText {
   font-size: 1.5rem;
@@ -286,55 +304,11 @@ export default {
   border-radius: 50px;
 }
 
-.quite {
-  background-color: #ff0000;
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-}
-
 /* Responsive Styles */
 
 @media (min-width: 768px) {
-  .overlay {
-    width: 60%;
-  }
-
   .form-control {
     width: 80%;
-  }
-
-  .form-submit,
-  .guide-button {
-    width: 40%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .overlay {
-    width: 40%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .overlay {
-    width: 30%;
-  }
-}
-
-@media (max-width: 480px) {
-  .overlay {
-    width: 90%;
-  }
-}
-
-@media (max-width: 360px) {
-  .overlay {
-    width: 95%;
   }
 }
 </style>

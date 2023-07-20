@@ -132,8 +132,8 @@ export default {
             required
           />
           <span class="toggle-password" @click="togglePasswordVisibility">
-            <i v-if="passwordVisible" class="fas fa-eye-slash"></i>
-            <i v-else class="fas fa-eye"></i>
+            <i v-if="passwordVisible" class="fas fa-eye"></i>
+            <i v-else class="fas fa-eye-slash"></i>
           </span>
         </div>
         <div class="password-validation">
@@ -321,6 +321,31 @@ export default {
   position: absolute;
   top: 16px;
   right: 16px;
+}
+.form-submit {
+  background-color: var(--color-secondary);
+  border: none;
+  text-align: center;
+  padding: 10px;
+  width: 50%;
+  font-size: 120%;
+  border-radius: 30px;
+  margin-bottom: 7%;
+  outline: none;
+  cursor: pointer;
+  font-family: "Josefin Sans", sans-serif;
+}
+.form-control {
+  background-color: var(--color-background);
+  width: 80%;
+  height: 50px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  margin-bottom: 3%;
+  color: var(--color-text-light);
+  font-size: 120%;
+  padding-left: 5%;
 }
 
 /* Responsive Styles */

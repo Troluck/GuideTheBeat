@@ -63,6 +63,7 @@ export default {
         </p>
       </div>
     </div>
+
     <modale
       :userData="userData"
       :modaleOpen="modalOpen"

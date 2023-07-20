@@ -79,8 +79,8 @@ export default {
               v-model="user.password"
             />
             <span class="toggle-password" @click="togglePasswordVisibility">
-              <i v-if="passwordVisible" class="fas fa-eye-slash"></i>
-              <i v-else class="fas fa-eye"></i>
+              <i v-if="passwordVisible" class="fas fa-eye"></i>
+              <i v-else class="fas fa-eye-slash"></i>
             </span>
           </div>
           <input
